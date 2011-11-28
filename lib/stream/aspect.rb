@@ -43,7 +43,7 @@ class Stream::Aspect < Stream::Base
                                              :type => TYPES_OF_POST_IN_STREAM,
                                              :order => "#{order} DESC",
                                              :max_time => max_time
-                   ).for_a_stream(max_time, order)
+                   )
   end
 
   # @return [ActiveRecord::Association<Person>] AR association of people within stream's given aspects
@@ -81,7 +81,7 @@ class Stream::Aspect < Stream::Base
   # @return [String]
   def title
     if self.for_all_aspects?
-      I18n.t('aspects.aspect_stream.stream')
+      I18n.t('streams.aspects.title')
     else
       self.aspects.to_sentence
     end

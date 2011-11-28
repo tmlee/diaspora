@@ -24,16 +24,20 @@ describe User do
     end
 
     it "contains public posts from people you're following" do
-      pending
-      dogs = bob.aspects.create(:name => "dogs")
-      bobs_public_post = Factory(:status_message, :text => "hello", :public => true, :author => bob.person)
+      # Alice follows Eve, but Eve does not follow Alice
+      alice.share_with(eve.person, @alices_aspect)
 
-      alice.visible_shareable_ids(Post).should include(bobs_public_post.id)
+      # Eve posts a public status message
+      eves_public_post = eve.post(:status_message, :text => "hello", :to => 'all', :public => true)
+
+      # Alice should see it
+      alice.visible_shareable_ids(Post).should include(eves_public_post.id)
     end
 
-    it "contains non-public posts from people who are following you" do
-      bobs_post = bob.post(:status_message, :text => "hello", :to => @bobs_aspect.id)
-      alice.visible_shareable_ids(Post).should include(bobs_post.id)
+    it "does not contain non-public posts from people who are following you" do
+      eve.share_with(alice.person, @eves_aspect)
+      eves_post = eve.post(:status_message, :text => "hello", :to => @eves_aspect.id)
+      alice.visible_shareable_ids(Post).should_not include(eves_post.id)
     end
 
     it "does not contain non-public posts from aspects you're not in" do
@@ -75,7 +79,6 @@ describe User do
       before do
         aspect_to_post = bob.aspects.where(:name => "generic").first
         @status = bob.post(:status_message, :text=> "hello", :to => aspect_to_post)
-        @vis = @status.share_visibilities(Post).first
       end
 
       it "pulls back non hidden posts" do
@@ -83,7 +86,8 @@ describe User do
       end
 
       it "does not pull back hidden posts" do
-        @vis.update_attributes(:hidden => true)
+        visibility = @status.share_visibilities(Post).where(:contact_id => alice.contact_for(bob.person).id).first
+        visibility.update_attributes(:hidden => true)
         alice.visible_shareable_ids(Post).include?(@status.id).should be_false
       end
     end
@@ -91,36 +95,69 @@ describe User do
     context "RedisCache" do
       before do
         AppConfig[:redis_cache] = true
-        @opts = {:order => "created_at DESC", :all_aspects? => true}
+        @opts = {:order => "created_at DESC", :order_field => "created_at", :all_aspects? => true}
       end
 
       after do
         AppConfig[:redis_cache] = nil
       end
 
-      it "gets populated with latest 100 posts" do
-        cache = mock(:cache_exists? => true, :supported_order? => true, :ensure_populated! => mock, :post_ids => [])
-        RedisCache.stub(:new).and_return(cache)
-        @opts = alice.send(:prep_opts, Post, @opts)
-        cache.should_receive(:ensure_populated!).with(hash_including(@opts))
-
-        alice.visible_shareable_ids(Post, @opts)
+      it "populates the cache if the user has a mutual contact" do
+        RedisCache.any_instance.should_receive(:ensure_populated!)
+        alice.stub(:use_cache?).and_return(true)
+        alice.visible_shareable_ids(Post)
       end
 
       it 'does not get used if if all_aspects? option is not present' do
         RedisCache.should_not_receive(:new)
-
         alice.visible_shareable_ids(Post, @opts.merge({:all_aspects? => false}))
       end
 
-      describe "#ensure_populated_cache" do
-        it 'does nothing if the cache is already populated'
-        it 're-populates the cache with the latest posts (in hashes)'
+      describe '#use_cache?' do
+        before do
+          cache = mock(:cache_exists? => true, :supported_order? => true, :ensure_populated! => mock, :post_ids => [])
+          RedisCache.stub(:new).and_return(cache)
+        end
+
+        it 'returns true if redis cache is set' do
+          AppConfig[:redis_cache] = true
+          alice.send(:use_cache?, @opts).should be_true
+        end
+
+        it 'returns false if redis cache is set' do
+          AppConfig[:redis_cache] = nil
+          alice.send(:use_cache?, @opts).should be_false
+        end
+      end
+
+      describe '#perform_db_query?' do
+        before do
+          @opts = {:limit => 15}
+        end
+
+        it 'returns true if cache is nil' do
+          alice.send(:perform_db_query?, [1,2,3], nil, @opts).should be_true
+        end
+
+        it 'returns true if cache shareable_ids is blank' do
+          cache = mock(:size => 100)
+          alice.send(:perform_db_query?, [], cache, @opts).should be_true
+        end
+
+        it 'returns true if cache shareable_ids length is less than opts[:limit]' do
+          cache = mock(:size => 100)
+          alice.send(:perform_db_query?, [1,2,3], cache, @opts).should be_true
+        end
+
+        it 'returns false if cache size is less than opts[:limit]' do
+          cache = mock(:size => 10)
+          alice.send(:perform_db_query?, [1,2,3], cache, @opts).should be_false
+        end
       end
 
       context 'populated cache' do
         before do
-          @cache = mock(:cache_exists? => true, :ensure_populated! => mock)
+          @cache = mock(:cache_exists? => true, :size => 100, :ensure_populated! => mock)
           RedisCache.stub(:new).and_return(@cache)
         end
 
@@ -136,13 +173,10 @@ describe User do
 
           alice.visible_shareable_ids(Post, @opts)
         end
-
-        it "does not get repopulated" do
-        end
       end
     end
   end
-  
+
   describe "#prep_opts" do
     it "defaults the opts" do
       time = Time.now

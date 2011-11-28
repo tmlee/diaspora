@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
 
   before_validation :strip_and_downcase_username
   before_validation :set_current_language, :on => :create
-  
+
   validates :username, :presence => true, :uniqueness => true
   validates_format_of :username, :with => /\A[A-Za-z0-9_]+\z/
   validates_length_of :username, :maximum => 32
@@ -28,6 +28,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :person, :unless => proc {|user| user.invitation_token.present?}
   validates_associated :person
+  validate :no_person_with_same_username
 
   has_one :person, :foreign_key => :owner_id
   delegate :public_key, :posts, :photos, :owns?, :diaspora_handle, :name, :public_url, :profile, :first_name, :last_name, :to => :person
@@ -42,6 +43,7 @@ class User < ActiveRecord::Base
   has_many :user_preferences, :dependent => :destroy
   has_many :tag_followings, :dependent => :destroy
   has_many :followed_tags, :through => :tag_followings, :source => :tag, :order => 'tags.name'
+  has_many :blocks
 
   has_many :authorizations, :class_name => 'OAuth2::Provider::Models::ActiveRecord::Authorization', :foreign_key => :resource_owner_id
   has_many :applications, :through => :authorizations, :source => :client
@@ -57,7 +59,8 @@ class User < ActiveRecord::Base
                   :language,
                   :disable_mail,
                   :invitation_service,
-                  :invitation_identifier
+                  :invitation_identifier,
+                  :show_community_spotlight_in_stream
 
 
   def self.all_sharing_with_person(person)
@@ -100,6 +103,11 @@ class User < ActiveRecord::Base
     # we need to make a custom validator here to make this safer
     user.save(:validate => false)
     user
+  end
+
+  def send_reset_password_instructions
+    generate_reset_password_token! if should_generate_token?
+    Resque.enqueue(Jobs::ResetPassword, self.id)
   end
 
 
@@ -362,7 +370,8 @@ class User < ActiveRecord::Base
   def setup(opts)
     self.username = opts[:username]
     self.email = opts[:email]
-    self.language ||= 'en'
+    self.language = opts[:language]
+    self.language ||= I18n.locale.to_s
     self.valid?
     errors = self.errors
     errors.delete :person
@@ -470,5 +479,12 @@ class User < ActiveRecord::Base
   def infer_email_from_invitation_provider
     self.email = self.invitation_identifier if self.invitation_service == 'email'
     self
+  end
+
+  def no_person_with_same_username
+    diaspora_id = "#{self.username}@#{AppConfig[:pod_uri].host}"
+    if self.username_changed? && Person.exists?(:diaspora_handle => diaspora_id)
+      errors[:base] << 'That username has already been taken'
+    end
   end
 end

@@ -4,6 +4,11 @@ describe Stream::Base do
   before do
     @stream = Stream::Base.new(alice)
   end
+  describe '#contacts_link' do
+    it 'should default to your contacts page' do
+      @stream.contacts_link.should =~ /contacts/
+    end
+  end
 
   describe '.can_comment?' do
     before do
@@ -35,6 +40,13 @@ describe Stream::Base do
     it 'returns false if person is remote and not a contact' do
       post = Factory(:status_message, :author => @person)
       @stream.can_comment?(post).should be_false
+    end
+  end
+
+  describe '#people' do
+    it 'excludes blocked people' do
+      @stream.should_receive(:stream_posts).and_return(stub.as_null_object)
+      @stream.people
     end
   end
 

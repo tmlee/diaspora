@@ -4,6 +4,8 @@
 
 class StatusMessagesController < ApplicationController
   before_filter :authenticate_user!
+  
+  before_filter :remove_getting_started, :only => [:create]
 
   respond_to :html
   respond_to :mobile
@@ -32,7 +34,9 @@ class StatusMessagesController < ApplicationController
     @aspects = current_user.aspects
     @selected_contacts = @aspects.map { |aspect| aspect.contacts }.flatten.uniq
     @aspect_ids = @aspects.map{|x| x.id}
-    render :layout => nil
+    if ! is_mobile_device?
+      render :layout => nil
+    end
   end
 
   def create
@@ -67,7 +71,7 @@ class StatusMessagesController < ApplicationController
       respond_to do |format|
         format.js { render :create, :status => 201}
         format.html { redirect_to :back}
-        format.mobile{ redirect_to root_url}
+        format.mobile{ redirect_to multi_path}
       end
     else
       unless photos.empty?
@@ -94,6 +98,13 @@ class StatusMessagesController < ApplicationController
 
   helper_method :comments_expanded
   def comments_expanded
+    true
+  end
+
+  def remove_getting_started
+    if current_user.getting_started == true
+      current_user.update_attributes(:getting_started => false)
+    end
     true
   end
 end

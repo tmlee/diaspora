@@ -3,7 +3,7 @@
 #   the COPYRIGHT file.
 
 class PhotosController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => :show
 
   helper_method :parent, :photo, :additional_photos, :next_photo, :previous_photo, :ownership
 
@@ -71,6 +71,7 @@ class PhotosController < ApplicationController
 
         respond_to do |format|
           format.json{ render(:layout => false , :json => {"success" => true, "data" => @photo}.to_json )}
+          format.html{ render(:layout => false , :json => {"success" => true, "data" => @photo}.to_json )}
         end
       else
         respond_with @photo, :location => photos_path, :error => message
@@ -140,10 +141,18 @@ class PhotosController < ApplicationController
   end
 
   def show
-    if photo
-      respond_with photo
+    if user_signed_in?
+      @photo = current_user.find_visible_shareable_by_id(Photo, params[:id])
     else
+      @photo = Photo.where(:id => params[:id], :public => true).first
+    end
+
+    if @photo
+      respond_with @photo
+    elsif user_signed_in?
       redirect_to :back
+    else
+      redirect_to new_user_session_path
     end
   end
 
@@ -178,7 +187,7 @@ class PhotosController < ApplicationController
   # helpers
 
   def ownership
-    @ownership ||= current_user.owns? photo
+    @ownership ||= (current_user.present? && current_user.owns?(photo))
   end
 
   def parent
@@ -208,6 +217,11 @@ class PhotosController < ApplicationController
   private
 
   def file_handler(params)
+    # For XHR file uploads, request.params[:qqfile] will be the path to the temporary file
+    # For regular form uploads (such as those made by Opera), request.params[:qqfile] will be an UploadedFile which can be returned unaltered.
+    if not request.params[:qqfile].is_a?(String)
+      params[:qqfile]
+    else
       ######################## dealing with local files #############
       # get file name
       file_name = params[:qqfile]
@@ -229,5 +243,6 @@ class PhotosController < ApplicationController
       Tempfile.send(:define_method, "content_type") {return att_content_type}
       Tempfile.send(:define_method, "original_filename") {return file_name}
       file
+    end
   end
 end

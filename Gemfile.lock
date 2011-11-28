@@ -47,15 +47,6 @@ GIT
   specs:
     http_accept_language (1.0.1)
 
-GIT
-  remote: git://github.com/igrigorik/em-websocket
-  revision: e278f5a1c4db60be7485859520a069e08bfe1247
-  ref: e278f5a1c4db60be7485
-  specs:
-    em-websocket (0.2.0)
-      addressable (>= 2.1.1)
-      eventmachine (>= 0.12.9)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -63,14 +54,14 @@ GEM
       Platform (>= 0.4.0)
       open4
     Platform (0.4.0)
-    SystemTimer (1.2.1)
+    SystemTimer (1.2.3)
     abstract (1.0.0)
-    actionmailer (3.0.10)
-      actionpack (= 3.0.10)
+    actionmailer (3.0.11)
+      actionpack (= 3.0.11)
       mail (~> 2.2.19)
-    actionpack (3.0.10)
-      activemodel (= 3.0.10)
-      activesupport (= 3.0.10)
+    actionpack (3.0.11)
+      activemodel (= 3.0.11)
+      activesupport (= 3.0.11)
       builder (~> 2.1.2)
       erubis (~> 2.6.6)
       i18n (~> 0.5.0)
@@ -78,22 +69,22 @@ GEM
       rack-mount (~> 0.6.14)
       rack-test (~> 0.5.7)
       tzinfo (~> 0.3.23)
-    activemodel (3.0.10)
-      activesupport (= 3.0.10)
+    activemodel (3.0.11)
+      activesupport (= 3.0.11)
       builder (~> 2.1.2)
       i18n (~> 0.5.0)
-    activerecord (3.0.10)
-      activemodel (= 3.0.10)
-      activesupport (= 3.0.10)
+    activerecord (3.0.11)
+      activemodel (= 3.0.11)
+      activesupport (= 3.0.11)
       arel (~> 2.0.10)
       tzinfo (~> 0.3.23)
     activerecord-import (0.2.8)
       activerecord (~> 3.0pre)
       activerecord (~> 3.0pre)
-    activeresource (3.0.10)
-      activemodel (= 3.0.10)
-      activesupport (= 3.0.10)
-    activesupport (3.0.10)
+    activeresource (3.0.11)
+      activemodel (= 3.0.11)
+      activesupport (= 3.0.11)
+    activesupport (3.0.11)
     addressable (2.2.4)
     archive-tar-minitar (0.5.2)
     arel (2.0.10)
@@ -113,6 +104,7 @@ GEM
       net-ssh-gateway (>= 1.0.0)
     capistrano-ext (1.2.1)
       capistrano (>= 1.0.0)
+    capistrano_colors (0.5.5)
     capybara (0.3.9)
       culerity (>= 0.2.4)
       mime-types (>= 1.16)
@@ -120,7 +112,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       selenium-webdriver (>= 0.0.3)
-    carrierwave (0.5.2)
+    carrierwave (0.5.3)
       activesupport (~> 3.0)
     cgi_multipart_eof_fix (2.5.0)
     chef (0.9.12)
@@ -168,6 +160,9 @@ GEM
       rails (>= 3.0.0, <= 3.2)
     diff-lcs (1.1.3)
     em-synchrony (0.2.0)
+      eventmachine (>= 0.12.9)
+    em-websocket (0.3.5)
+      addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -252,7 +247,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     messagebus_ruby_api (0.4.8)
-    mime-types (1.16)
+    mime-types (1.17.2)
     mini_magick (3.2)
       subexec (~> 0.0.4)
     mixlib-authentication (1.1.4)
@@ -282,7 +277,7 @@ GEM
     net-ssh (2.0.24)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
-    newrelic_rpm (3.2.0)
+    newrelic_rpm (3.3.0)
     nokogiri (1.4.3.1)
     oa-basic (0.2.6)
       oa-core (= 0.2.6)
@@ -336,7 +331,7 @@ GEM
     parallel (0.5.9)
     parallel_tests (0.6.7)
       parallel
-    polyglot (0.3.2)
+    polyglot (0.3.3)
     pyu-ruby-sasl (0.0.3.3)
     rack (1.2.4)
     rack-mobile-detect (0.3.0)
@@ -348,26 +343,26 @@ GEM
       ruby-openid (>= 2.1.8)
     rack-test (0.5.7)
       rack (>= 1.0)
-    rails (3.0.10)
-      actionmailer (= 3.0.10)
-      actionpack (= 3.0.10)
-      activerecord (= 3.0.10)
-      activeresource (= 3.0.10)
-      activesupport (= 3.0.10)
+    rails (3.0.11)
+      actionmailer (= 3.0.11)
+      actionpack (= 3.0.11)
+      activerecord (= 3.0.11)
+      activeresource (= 3.0.11)
+      activesupport (= 3.0.11)
       bundler (~> 1.0)
-      railties (= 3.0.10)
-    rails-i18n (0.1.10)
+      railties (= 3.0.11)
+    rails-i18n (0.1.11)
       i18n (~> 0.5)
-    railties (3.0.10)
-      actionpack (= 3.0.10)
-      activesupport (= 3.0.10)
+    railties (3.0.11)
+      actionpack (= 3.0.11)
+      activesupport (= 3.0.11)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (~> 0.14.4)
-    rake (0.9.2)
+    rake (0.9.2.2)
     rash (0.3.0)
       hashie (~> 1.0.0)
-    rdoc (3.10)
+    rdoc (3.11)
       json (~> 1.4)
     redcarpet (2.0.0b5)
     redis (2.2.2)
@@ -423,9 +418,9 @@ GEM
     rubyntlm (0.1.1)
     rubyzip (0.9.4)
     sass (3.1.7)
-    selenium-webdriver (2.7.0)
+    selenium-webdriver (2.10.0)
       childprocess (>= 0.2.1)
-      ffi (>= 1.0.7)
+      ffi (= 1.0.9)
       json_pure
       rubyzip
     settingslogic (2.0.6)
@@ -457,7 +452,7 @@ GEM
     typhoeus (0.2.4)
       mime-types
       mime-types
-    tzinfo (0.3.30)
+    tzinfo (0.3.31)
     uuidtools (2.1.2)
     vegas (0.1.8)
       rack (>= 1.0.0)
@@ -476,7 +471,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SystemTimer (= 1.2.1)
+  SystemTimer (= 1.2.3)
   activerecord-import
   acts-as-taggable-on!
   addressable (= 2.2.4)
@@ -484,8 +479,9 @@ DEPENDENCIES
   bundler (>= 1.0.0)
   capistrano (= 2.5.19)
   capistrano-ext (= 1.2.1)
+  capistrano_colors
   capybara (~> 0.3.9)
-  carrierwave (= 0.5.2)
+  carrierwave (= 0.5.3)
   chef (= 0.9.12)
   client_side_validations
   cloudfiles (= 1.4.10)
@@ -496,7 +492,7 @@ DEPENDENCIES
   devise_invitable (= 0.5.0)
   diaspora-client!
   em-synchrony
-  em-websocket!
+  em-websocket
   excon (= 0.2.4)
   factory_girl_rails
   faraday
@@ -528,7 +524,7 @@ DEPENDENCIES
   ohai (= 0.5.8)
   omniauth (= 0.2.6)
   parallel_tests
-  rails (= 3.0.10)
+  rails (= 3.0.11)
   rails-i18n
   redcarpet (= 2.0.0b5)
   resque (= 1.10.0)
@@ -544,7 +540,7 @@ DEPENDENCIES
   ruby-debug19
   ruby-oembed
   sass (= 3.1.7)
-  selenium-webdriver (~> 2.7.0)
+  selenium-webdriver (~> 2.10.0)
   settingslogic (= 2.0.6)
   sod!
   sqlite3

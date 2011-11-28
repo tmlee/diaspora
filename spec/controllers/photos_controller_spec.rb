@@ -16,6 +16,34 @@ describe PhotosController do
 
   describe '#create' do
     before do
+      @params = {
+        :photo => {:aspect_ids => "all"},
+        :qqfile => Rack::Test::UploadedFile.new(
+          File.join( Rails.root, "spec/fixtures/button.png" ),
+          "image/png"
+        )
+      }
+    end
+
+    it 'accepts a photo from a regular form submission' do
+      lambda {
+        post :create, @params
+      }.should change(Photo, :count).by(1)
+    end
+
+    it 'returns application/json when possible' do
+      request.env['HTTP_ACCEPT'] = 'application/json'
+      post(:create, @params).headers['Content-Type'].should match 'application/json.*'
+    end
+
+    it 'returns text/html by default' do
+      request.env['HTTP_ACCEPT'] = 'text/html,*/*'
+      post(:create, @params).headers['Content-Type'].should match 'text/html.*'
+    end
+  end
+
+  describe '#create' do
+    before do
       @controller.stub!(:file_handler).and_return(uploaded_photo)
       @params = {:photo => {:user_file => uploaded_photo, :aspect_ids => "all"} }
     end
@@ -35,6 +63,12 @@ describe PhotosController do
   end
 
   describe '#index' do
+    it "succeeds without any available pictures" do
+      get :index, :person_id => Factory(:person).id.to_s
+
+      response.should be_success
+    end
+
     it "displays the logged in user's pictures" do
       get :index, :person_id => alice.person.id.to_s
       assigns[:person].should == alice.person
@@ -103,22 +137,46 @@ describe PhotosController do
         get :show, :id => @photo.to_param
         response.should redirect_to(aspects_path)
       end
+      
+      it 'redirects to the sign in page if not logged in' do
+        controller.stub(:user_signed_in?).and_return(false) #sign_out :user doesn't work
+        get :show, :id => @photo.to_param
+        response.should redirect_to new_user_session_path
+      end
     end
 
     context "public photo" do
       before do
         user3 = Factory(:user_with_aspect)
         @photo = user3.post(:photo, :user_file => uploaded_photo, :to => user3.aspects.first.id, :public => true)
-        get :show, :id => @photo.to_param
       end
+      context "user logged in" do
+        before do
+          get :show, :id => @photo.to_param
+        end
 
-      it "succeeds" do
-        response.should be_success
+        it "succeeds" do
+          response.should be_success
+        end
+
+        it "assigns the photo" do
+          assigns[:photo].should == @photo
+          @controller.ownership.should be_false
+        end
       end
+      context "not logged in" do
+        before do
+          sign_out :user
+          get :show, :id => @photo.to_param
+        end
 
-      it "assigns the photo" do
-        assigns[:photo].should == @photo
-        @controller.ownership.should be_false
+        it "succeeds" do
+          response.should be_success
+        end
+
+        it "assigns the photo" do
+          assigns[:photo].should == @photo
+        end
       end
     end
   end

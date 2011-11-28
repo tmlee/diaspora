@@ -22,7 +22,8 @@ class ApplicationController < ActionController::Base
                 :my_contacts_count,
                 :only_sharing_count,
                 :tag_followings,
-                :tags
+                :tags,
+                :open_publisher
 
   def ensure_http_referer_is_set
     request.env['HTTP_REFERER'] ||= '/aspects'
@@ -93,7 +94,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_unless_admin
     unless current_user.admin?
-      redirect_to root_url, :notice => 'you need to be an admin to do that'
+      redirect_to multi_url, :notice => 'you need to be an admin to do that'
       return
     end
   end
@@ -121,7 +122,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    stored_location_for(:user) || (current_user.getting_started? ? getting_started_path : aspects_path)
+    stored_location_for(:user) || (current_user.getting_started? ? getting_started_path : multi_path)
   end
 
   def tag_followings
@@ -153,7 +154,7 @@ class ApplicationController < ActionController::Base
     @stream = stream_klass.new(current_user, :max_time => max_time, :order => sort_order)
 
     if params[:only_posts]
-      render :partial => 'shared/stream', :locals => {:posts => @stream.posts}
+      render :partial => 'shared/stream', :locals => {:posts => @stream.stream_posts}
     else
       render 'aspects/index'
     end

@@ -20,6 +20,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def privacy_settings
+    @blocks = current_user.blocks.includes(:person)
+  end
+
   def update
     password_changed = false
     @user = current_user
@@ -41,8 +45,16 @@ class UsersController < ApplicationController
         else
           flash[:error] = I18n.t 'users.update.password_not_changed'
         end
+      elsif u[:show_community_spotlight_in_stream] || u[:getting_started]
+        if @user.update_attributes(u)
+          flash[:notice] = I18n.t 'users.update.settings_updated'
+          redirect_to multi_path
+          return
+        else
+          flash[:notice] = I18n.t 'users.update.settings_not_updated'
+        end
       elsif u[:language]
-        if @user.update_attributes(:language => u[:language])
+        if @user.update_attributes(u)
           I18n.locale = @user.language
           flash[:notice] = I18n.t 'users.update.language_changed'
         else
@@ -68,11 +80,20 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    Resque.enqueue(Jobs::DeleteAccount, current_user.id)
-    current_user.lock_access!
-    sign_out current_user
-    flash[:notice] = I18n.t 'users.destroy'
-    redirect_to root_path
+    if params[:user] && params[:user][:current_password] && current_user.valid_password?(params[:user][:current_password])
+      Resque.enqueue(Jobs::DeleteAccount, current_user.id)
+      current_user.lock_access!
+      sign_out current_user
+      flash[:notice] = I18n.t 'users.destroy.success'
+      redirect_to multi_path
+    else
+      if params[:user].present? && params[:user][:current_password].present?
+        flash[:error] = t 'users.destroy.wrong_password'
+      else
+        flash[:error] = t 'users.destroy.no_password'
+      end
+      redirect_to :back
+    end
   end
 
   def public
@@ -88,7 +109,7 @@ class UsersController < ApplicationController
         format.any { redirect_to person_path(user.person.id) }
       end
     else
-      redirect_to root_url, :error => I18n.t('users.public.does_not_exist', :username => params[:username])
+      redirect_to multi_path, :error => I18n.t('users.public.does_not_exist', :username => params[:username])
     end
   end
 
@@ -97,22 +118,21 @@ class UsersController < ApplicationController
     @user     = current_user
     @person   = @user.person
     @profile  = @user.profile
-    @services = @user.services
-    @step     = 0
 
     render "users/getting_started"
   end
 
   def logged_out
+    @page = :logged_out
     if user_signed_in?
-      redirect_to root_path
+      redirect_to multi_path
     end
   end
 
   def getting_started_completed
     user = current_user
     user.update_attributes(:getting_started => false)
-    redirect_to root_path
+    redirect_to multi_path
   end
 
   def export

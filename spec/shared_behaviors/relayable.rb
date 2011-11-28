@@ -7,11 +7,6 @@ require 'spec_helper'
 describe Diaspora::Relayable do
   shared_examples_for "it is relayable" do
 
-    context 'validation' do
-      it 'ensures an valid associated parent'
-      it 'ensures the presence of an author'
-    end
-
     context 'encryption' do
       describe '#parent_author_signature' do
         it 'should sign the object if the user is the post author' do
@@ -62,7 +57,7 @@ describe Diaspora::Relayable do
         it 'dispatches when the person receiving is the parent author' do
           p = Postzord::Dispatcher.build(@local_luke, @object_by_recipient)
           p.should_receive(:post)
-          Postzord::Dispatcher.stub!(:new).and_return(p)
+          p.class.stub!(:new).and_return(p)
           @object_by_recipient.receive(@local_luke, @local_leia.person)
         end
 

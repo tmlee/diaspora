@@ -110,6 +110,13 @@ describe User do
         alice.should_not be_valid
       end
 
+      it 'requires uniqueness also amount Person objects with diaspora handle' do
+        p = Factory(:person, :diaspora_handle => "jimmy@#{AppConfig[:pod_uri].host}")
+        alice.username = 'jimmy'
+        alice.should_not be_valid
+
+      end
+
       it "downcases username" do
         user = Factory.build(:user, :username => "WeIrDcAsE")
         user.should be_valid
@@ -151,7 +158,7 @@ describe User do
         alice.username =  "hexagooooooooooooooooooooooooooon"
         alice.should_not be_valid
       end
-      
+
       it "cannot be one of the blacklist names" do
         ['hostmaster', 'postmaster', 'root', 'webmaster'].each do |username|
           alice.username =  username
@@ -209,8 +216,14 @@ describe User do
 
       it "should save with current language if blank" do
         I18n.locale = :fr
-        user = Factory(:user, :language => nil)
+        user = User.build(:username => 'max', :email => 'foo@bar.com', :password => 'password', :password_confirmation => 'password')
         user.language.should == 'fr'
+      end
+
+      it "should save with language what is set" do
+        I18n.locale = :fr
+        user = User.build(:username => 'max', :email => 'foo@bar.com', :password => 'password', :password_confirmation => 'password', :language => 'de')
+        user.language.should == 'de'
       end
     end
   end
@@ -375,9 +388,7 @@ describe User do
     end
   end
 
-  describe '.find_or_create_by_invitation' do
-
-  end
+  describe '.find_or_create_by_invitation'
 
   describe '.create_from_invitation!' do
     before do
@@ -393,7 +404,6 @@ describe User do
     it 'sets the email if the service is email' do
       @user.email.should == @inv.identifier
     end
-
   end
 
   describe 'update_user_preferences' do
@@ -543,7 +553,6 @@ describe User do
         alice.should_receive(:disconnect_everyone)
         alice.remove_all_traces
       end
-
 
       it 'should remove mentions' do
         alice.should_receive(:remove_mentions)
@@ -972,10 +981,28 @@ describe User do
 
         bob.retract(@post)
       end
+    end
+  end
 
-      it 'performs the retraction' do
-        pending
-      end
+  describe "#send_reset_password_instructions" do
+    it "generates a reset password token if it's supposed to" do
+      user = User.new
+      user.stub!(:should_generate_token?).and_return(true)
+      user.should_receive(:generate_reset_password_token)
+      user.send_reset_password_instructions
+    end
+
+    it "does not generate a reset password token if it's not supposed to" do
+      user = User.new
+      user.stub!(:should_generate_token?).and_return(false)
+      user.should_not_receive(:generate_reset_password_token)
+      user.send_reset_password_instructions
+    end
+    
+    it "queues up a job to send the reset password instructions" do
+      user = Factory :user
+      Resque.should_receive(:enqueue).with(Jobs::ResetPassword, user.id)
+      user.send_reset_password_instructions
     end
   end
 end

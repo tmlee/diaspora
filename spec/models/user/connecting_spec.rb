@@ -52,8 +52,8 @@ describe Diaspora::UserModules::Connecting do
       it 'calls remove contact' do
         contact = bob.contact_for(alice.person)
 
-        bob.should_receive(:remove_contact).with(contact)
-        bob.disconnect contact
+        bob.should_receive(:remove_contact).with(contact, {})
+        bob.disconnect(contact)
       end
 
       it 'dispatches a retraction' do
@@ -131,7 +131,7 @@ describe Diaspora::UserModules::Connecting do
       it 'dispatches a request on a share-back' do
         eve.share_with(alice.person, eve.aspects.first)
 
-        contact = alice.contacts.new(:person => eve.person)
+        contact = alice.contact_for(eve.person)
         alice.contacts.stub!(:find_or_initialize_by_person_id).and_return(contact)
 
         contact.should_receive(:dispatch_request)

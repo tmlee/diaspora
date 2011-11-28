@@ -9,20 +9,18 @@ class Stream::FollowedTag < Stream::Base
   end
 
   def title
-    I18n.t('aspects.index.tags_following')
+    I18n.t('streams.followed_tag.title')
   end
 
   # @return [ActiveRecord::Association<Post>] AR association of posts
   def posts
     return [] if tag_string.empty?
-    @posts ||= StatusMessage.tag_stream(user, tag_array, max_time, order)
+    @posts ||= StatusMessage.user_tag_stream(user, tag_ids)
   end
 
   def contacts_title
-    I18n.translate('streams.tags.contacts_title')
+    I18n.translate('streams.followed_tag.contacts_title')
   end
-
-
 
   private
 
@@ -30,8 +28,8 @@ class Stream::FollowedTag < Stream::Base
     @tag_string ||= tags.join(', '){|tag| tag.name}.to_s
   end
 
-  def tag_array
-    tags.map{|x| x.name}
+  def tag_ids
+    tags.map{|x| x.id}
   end
 
   def tags

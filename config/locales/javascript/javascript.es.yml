@@ -3,57 +3,69 @@
 #   the COPYRIGHT file.
 
 
-es: 
-  javascripts: 
-    aspect_dropdown: 
+es:
+  javascripts:
+    aspect_dropdown:
       add_to_aspect: "Añadir contacto"
       all_aspects: "Todos los aspectos"
+      error: "No podría empezar a compartir con {{name}}.  ¿Vas a ignonarl@?"
       select_aspects: "Elige los aspectos"
-      toggle: 
+      started_sharing_with: "¡Ahora sigues los mensajes públicos de {{name}}!"
+      stopped_sharing_with: "Ya no compartes más con {{name}}."
+      toggle:
         few: "En {{count}} aspectos"
         many: "En {{count}} aspectos"
         one: "En {{count}} aspecto"
         other: "En {{count}} aspectos"
         two: "En {{count}} aspectos"
         zero: "Elige los aspectos"
-    aspect_navigation: 
+    aspect_navigation:
       deselect_all: "Desmarcar todos"
       no_aspects: "No hay aspectos seleccionados"
       select_all: "Marcar todos"
-    comments: 
+    comments:
       hide: "ocultar comentarios"
       show: "ver todos los comentarios"
     confirm_dialog: "¿Estás seguro?"
     failed_to_like: "¡Ha fallado tu aprobación!"
     failed_to_post_message: "¡Fallo al publicar el mensaje!"
-    infinite_scroll: 
+    getting_started:
+      alright_ill_wait: "Está bien, esperaré."
+      hey: "¡Hola, {{name}}!"
+      no_tags: "¡Eih, aún no sigues ninguna etiqueta! ¿Quieres continuar de todas formas?"
+      preparing_your_stream: "Preparando tus novedades personalizadas..."
+    infinite_scroll:
       no_more: "No hay más publicaciones."
-    publisher: 
-      at_least_one_aspect: "Debes publicarlo en al menos un aspecto"
-      limited: "Limitado - tu publicación solo será visible para las personas con quien compartes"
-      public: "Público - tu publicación será visible para todos, incluyendo buscadores"
-    reshares: 
-      duplicate: "¡Ya compartiste esa publicación!"
+    photo_uploader:
+      looking_good: "¡Guau, estás increíble!"
+    publisher:
+      at_least_one_aspect: "Debes publicarlo al menos en un aspecto"
+      limited: "Limitado - tu publicación solo es visible para gente con quien compartes"
+      public: "Público - tu publicación es visible para todos, incluyendo buscadores"
+    reshares:
+      duplicate: "Que bien, ¿eh? ¡Has compartido esa publicación!"
     search_for: "Buscar a {{name}}"
     show_more: "mostrar más"
-    timeago: 
-      day: "un día"
+    tags:
+      wasnt_that_interesting: "OK, supongo que #{{tagName}} no era tan interesante..."
+    timeago:
+      day: "1 día"
       days: "%d días"
-      hour: "una hora aproximadamente"
+      hour: "1 hora aproximadamente"
       hours: "%d horas aproximadamente"
-      minute: "un minuto"
+      minute: "1 minuto aproximadamente"
       minutes: "%d minutos"
-      month: "un mes aproximadamente"
-      months: "%d meses aproximadamente"
+      month: "1 mes aproximadamente"
+      months: "%d meses"
       prefixAgo: "hace"
-      prefixFromNow: "desde ahora"
-      seconds: "menos de un minuto"
+      prefixFromNow: "dentro de"
+      seconds: "menos de 1 minuto"
       suffixAgo: ""
-      suffixFromNow: "desde ahora"
-      year: "un año aproximadamente"
+      suffixFromNow: ""
+      year: "1 año aproximadamente"
       years: "%d años"
-    videos: 
+    videos:
       unknown: "Tipo de video desconocido"
       watch: "Ver este video con {{provider}}"
-    web_sockets: 
+    web_sockets:
       disconnected: "El canal está cerrado; las publicaciones no serán actualizadas al momento."

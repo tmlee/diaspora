@@ -14,13 +14,14 @@ class TagFollowingsController < ApplicationController
   # POST /tag_followings
   # POST /tag_followings.xml
   def create
-    @tag = ActsAsTaggableOn::Tag.find_or_create_by_name(params[:name])
+    name_normalized = ActsAsTaggableOn::Tag.normalize(params['name'])
+    @tag = ActsAsTaggableOn::Tag.find_or_create_by_name(name_normalized)
     @tag_following = current_user.tag_followings.new(:tag_id => @tag.id)
 
     if @tag_following.save
-      flash[:notice] = I18n.t('tag_followings.create.success', :name => params[:name])
+      flash[:notice] = I18n.t('tag_followings.create.success', :name => name_normalized)
     else
-      flash[:error] = I18n.t('tag_followings.create.failure', :name => params[:name])
+      flash[:error] = I18n.t('tag_followings.create.failure', :name => name_normalized)
     end
 
     redirect_to :back
@@ -39,8 +40,8 @@ class TagFollowingsController < ApplicationController
 
     if params[:remote]
       respond_to do |format|
-        format.all{}
-        format.js{ render 'tags/update' }
+        format.all {}
+        format.js { render 'tags/update' }
       end
     else
       if @tag_unfollowed
@@ -50,5 +51,16 @@ class TagFollowingsController < ApplicationController
       end
       redirect_to tag_path(:name => params[:name])
     end
+  end
+
+  def create_multiple
+    if params[:tags].present?
+      params[:tags].split(",").each do |name|
+        name_normalized = ActsAsTaggableOn::Tag.normalize(name)
+        @tag = ActsAsTaggableOn::Tag.find_or_create_by_name(name_normalized)
+        @tag_following = current_user.tag_followings.create(:tag_id => @tag.id)
+      end
+    end
+    redirect_to multi_path
   end
 end

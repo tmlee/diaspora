@@ -2,7 +2,7 @@ module NavigationHelpers
   def path_to(page_name)
     case page_name
       when /^the home(?: )?page$/
-        root_path
+        multi_path
       when /^step (\d)$/
         if $1.to_i == 1
           getting_started_path
@@ -30,7 +30,7 @@ module NavigationHelpers
       when /^the photo page for "([^\"]*)"'s latest post$/
         photo_path(User.find_by_email($1).photos.last)
       when /^the photo page for "([^\"]*)"'s post "([^\"]*)"$/
-        photo_path(User.find_by_email($1).posts.find_by_text($2))
+        post_path(User.find_by_email($1).posts.find_by_text($2))
       when /^"(\/.*)"/
         $1
       else

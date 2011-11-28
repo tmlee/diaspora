@@ -4,10 +4,10 @@
 
 class RedisCache
 
-  SUPPORTED_CACHES = [:created_at] #['updated_at', 
+  SUPPORTED_CACHES = [:created_at]
   CACHE_LIMIT = 100
 
-  def initialize(user, order_field)
+  def initialize(user, order_field=:created_at)
     @user = user
     @order_field = order_field.to_s
   end
@@ -21,7 +21,7 @@ class RedisCache
 
   # @return [Boolean]
   def cache_exists?
-    self.size != 0
+    self.redis.exists(set_key)
   end
 
   # @return [Integer] the cardinality of the redis set
@@ -39,7 +39,12 @@ class RedisCache
   end
 
   def repopulate!(opts = {})
+    self.purge!
     self.populate!(opts) && self.trim!
+  end
+
+  def purge!
+    self.redis.del(set_key)
   end
 
   def populate!(opts = {})

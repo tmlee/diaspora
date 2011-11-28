@@ -21,6 +21,15 @@
     .content
       = t('aspects.index.cubbies.explanation')
       = link_to t('aspects.index.cubbies.learn_more'), token_path
+.section
+  .title
+    = image_tag('/images/icons/heart.png')
+    %h5
+      = t('aspects.index.new_here.title')
+  .content
+    != t('aspects.index.new_here.follow', :link => link_to("#"+t('shared.publisher.new_user_prefill.newhere'), tag_path(:name => t('shared.publisher.new_user_prefill.newhere'))))
+    %br
+    = link_to(t('aspects.index.new_here.learn_more'), "https://github.com/diaspora/diaspora/wiki/Welcoming-Committee")
 
 .section
   .title
@@ -32,19 +41,17 @@
     %br
     = t('aspects.index.help.do_you')
     %br
-    != t('aspects.index.help.have_a_question', :link => link_to("#question" , tag_path(:name => "question")))
+    != t('aspects.index.help.have_a_question', :link => link_to("#"+t('aspects.index.help.tag_question'), tag_path(:name => t('aspects.index.help.tag_question'))))
     %br
-    != t('aspects.index.help.find_a_bug', :link => link_to("#bug" , tag_path(:name => "bug")))
+    != t('aspects.index.help.find_a_bug', :link => link_to("#"+t('aspects.index.help.tag_bug'), tag_path(:name => t('aspects.index.help.tag_bug'))))
     %br
-    != t('aspects.index.help.feature_suggestion', :link => link_to("#feature" , tag_path(:name => "feature")))
+    != t('aspects.index.help.feature_suggestion', :link => link_to("#"+t('aspects.index.help.tag_feature'), tag_path(:name => t('aspects.index.help.tag_feature'))))
     %br
     %br
     %p
-      != t('aspects.index.help.feature_and_forum', :gs=> link_to("GetSatisfaction", "http://getsatisfaction.com/diaspora", :target => '_blank'), :forum => link_to("Forum", "http://www.diasporaforum.org/", :target => '_blank'))
+      != t('aspects.index.help.tutorials_wiki_and_forum', :tutorial => link_to("Diasporial" , "http://diasporial.com/tutorials", :target => '_blank'), :wiki => link_to('Wiki','http://github.com/diaspora/diaspora/wiki', :target => '_blank'), :forum => link_to("Forum", "http://www.diasporaforum.org/", :target => '_blank'))
     %p
-      != t('aspects.index.help.tutorials_and_wiki', :tutorial => link_to("Diasporial" , "http://diasporial.com/tutorials", :target => '_blank'), :wiki => link_to('Wiki','http://github.com/diaspora/diaspora/wiki', :target => '_blank'))
-    %p
-      != t('aspects.index.help.email_feedback', :link => link_to("Email" , "mailto:yosem@joindiaspora.com"))
+      != t('aspects.index.help.email_feedback', :link => link_to(t('email'), "mailto:feedback@joindiaspora.com"))
 
 - unless AppConfig.configured_services.blank? || all_services_connected?
   .section
@@ -69,15 +76,7 @@
   .content
     != t('bookmarklet.explanation', :link => link_to(t('bookmarklet.explanation_link_text'), bookmarklet))
 
-- if @stream.has_communtiy_spotlight?
-  .section
-    .title.no_icon
-      %h5
-        =t('aspects.index.community_spotlight')
-    .content#community_spotlight
-      = link_to t('aspects.index.see_more_from_us'), spotlight_path, :id => 'view_all_contacts_link'
-
-- unless AppConfig[:paypal_hosted_button_id].blank?
+- if AppConfig[:paypal_hosted_button_id].present?
   .section
     .title
       = image_tag('/images/icons/coffee.png')
@@ -87,5 +86,4 @@
       = t('aspects.index.keep_us_running', :pod => URI.parse(AppConfig[:pod_url]).host)
       %br
       = render 'shared/donate'
-
 

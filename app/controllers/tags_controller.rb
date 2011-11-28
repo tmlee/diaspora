@@ -1,7 +1,7 @@
 #   Copyright (c) 2010-2011, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
-require File.join(Rails.root, 'app', 'models', 'acts_as_taggable_on_tag')
+require File.join(Rails.root, 'app', 'models', 'acts_as_taggable_on', 'tag')
 require File.join(Rails.root, 'lib', 'stream', 'tag')
 
 class TagsController < ApplicationController
@@ -38,7 +38,7 @@ class TagsController < ApplicationController
     @stream = Stream::Tag.new(current_user, params[:name], :max_time => max_time, :page => params[:page])
 
     if params[:only_posts]
-      render :partial => 'shared/stream', :locals => {:posts => @stream.posts}
+      render :partial => 'shared/stream', :locals => {:posts => @stream.stream_posts}
       return
     end
   end

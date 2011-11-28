@@ -11,13 +11,17 @@ And /^I expand the publisher$/ do
     ')
 end
 
+When 'I click the aspects title' do
+  find('.home_selector').click
+end
+
 When /^I press the aspect dropdown$/ do
   find('.dropdown .button').click
 end
 
 And /^I toggle the aspect "([^"]*)"$/ do |aspect_name|
   aspect = @me.aspects.where(:name => aspect_name).first
-  find("li[data-aspect_id='#{aspect.id}']").click
+  find(".dropdown li[data-aspect_id='#{aspect.id}']").click
 end
 
 Then /^the publisher should be collapsed$/ do
@@ -58,7 +62,7 @@ And /^I hover over the "([^"]+)"$/ do |element|
 end
 
 When /^I click to delete the first post$/ do
-  page.execute_script('$(".stream_element").first().find(".stream_element_delete").first().click()')
+  page.execute_script('$(".stream_element").first().find(".remove_post").first().click()')
 end
 
 When /^I click to delete the first comment$/ do
@@ -194,7 +198,7 @@ When /^I resize my window to 800x600$/ do
   JS
 end
 
-Then /^I follow Edit Profile in the same window$/ do 
+Then /^I follow Edit Profile in the same window$/ do
   page.execute_script("$('a[href=\"#{edit_profile_path}\"]').removeAttr('target')")
 
   And %(I follow "Edit Profile")
@@ -206,4 +210,23 @@ end
 
 Then 'I press the attached image' do
   Then %{I press the 1st "img" within ".stream_element div.photo_attachments"}
+end
+
+And "I wait for the popovers to appear" do
+  wait_until(30) { evaluate_script('$(".popover").length') == 3 }
+end
+
+And /^I click close on all the popovers$/ do
+  page.execute_script("var time = 400; $('.popover .close').each(
+          function(index, element){ setTimeout(function(){ $(element).click()},time);
+          time += 800;
+ });")
+end
+
+Then /^I should see first post deletion link$/ do
+  page.evaluate_script("$('.stream_element .delete').first().css('display')").should == "inline"
+end
+
+Then /^I should not see ajax loader on deletion link place$/ do
+  page.evaluate_script("$('.hide_loader').first().css('display')").should == "none"
 end

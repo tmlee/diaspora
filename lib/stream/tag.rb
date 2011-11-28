@@ -5,10 +5,10 @@
 class Stream::Tag < Stream::Base
   attr_accessor :tag_name, :people_page
 
-  def initialize(user, tag_name, opts={}) 
-    super(user, opts)
+  def initialize(user, tag_name, opts={})
     self.tag_name = tag_name
-    @people_page = opts[:page] || 1
+    self.people_page = opts[:page] || 1
+    super(user, opts)
   end
 
   def tag
@@ -35,15 +35,20 @@ class Stream::Tag < Stream::Base
     @posts ||= construct_post_query
   end
 
-  def publisher_prefill_text
-    display_tag_name + ' '
-  end
-
   def tag_name=(tag_name)
     @tag_name = tag_name.downcase.gsub('#', '')
   end
 
   private
+
+  def tag_prefill_text
+    I18n.translate('streams.tags.tag_prefill_text', :tag_name => display_tag_name)
+  end
+
+  # @return [Hash]
+  def publisher_opts
+    {:prefill => "#{tag_prefill_text}", :open => true}
+  end
 
   def construct_post_query
     posts = StatusMessage
@@ -52,6 +57,6 @@ class Stream::Tag < Stream::Base
     else
       posts = posts.all_public
     end
-    posts.tagged_with(tag_name).for_a_stream(max_time, 'created_at')
+    posts.tagged_with(tag_name)
   end
 end

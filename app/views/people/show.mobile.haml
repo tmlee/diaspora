@@ -10,6 +10,8 @@
   = person_image_tag @person, :thumb_medium
   %h2
     = @person.name
+  %span.description
+    = @person.diaspora_handle
 
 - if user_signed_in? && !(@contact.persisted? || current_user.person == @person)
   - if @incoming_request
@@ -20,12 +22,12 @@
         = link_to t('.return_to_aspects'), aspects_manage_path
         = t('.to_accept_or_ignore')
 
-- if @posts.length > 0
+- if @stream.stream_posts.length > 0
   -if @post_type == :photos
-    = render 'photos/index', :photos => @posts
+    = render 'photos/index', :photos => @stream.stream_posts
   - else
     #main_stream.stream
-      = render 'shared/stream', :posts => @posts
+      = render 'shared/stream', :posts => @stream.stream_posts
       #pagination
         =link_to(t('more'), next_page_path, :class => 'paginate')
 - else

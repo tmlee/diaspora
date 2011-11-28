@@ -8,8 +8,8 @@ describe("Diaspora.Widgets.StreamElement", function() {
 
   beforeEach(function() {
     jasmine.Clock.useMock();
-    spec.loadFixture("aspects_index_with_posts");
-    streamElement = Diaspora.BaseWidget.instantiate("StreamElement", $(".stream_element:has(a.stream_element_delete.vis_hide)"));
+    spec.loadFixture("aspects_index_only_posts");
+    streamElement = Diaspora.BaseWidget.instantiate("StreamElement", $(".stream_element").first());
   });
 
   describe("hidePost", function() {
@@ -18,6 +18,7 @@ describe("Diaspora.Widgets.StreamElement", function() {
       expect(streamElement.hidePostLoader).toHaveClass("hidden");
       spyOn($, "ajax");
       streamElement.deletePostLink.click();
+      streamElement.hidePostLoader.triggerHandler('ajaxStart');
       jasmine.Clock.tick(200);
       expect($.ajax).toHaveBeenCalled();
       expect(streamElement.deletePostLink).toHaveClass("hidden");

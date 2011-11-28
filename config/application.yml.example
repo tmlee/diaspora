@@ -18,11 +18,10 @@ defaults: &defaults
   # Websocket port - should normally be 8080 or 8081.
   socket_port: 8080
 
-  # Setting the root certificate bundle (this is operating system specific). Defaults:
-  # CentOS: '/etc/pki/tls/certs/ca-bundle.crt'
-  # Debian: '/etc/ssl/certs/ca-certificates.crt'
-  # Gentoo: '/etc/ssl/certs/ca-certificates.crt'
-  ca_file: '/etc/pki/tls/certs/ca-bundle.crt'
+  # Setting the root certificate bundle (this is operating system specific). Examples, uncomment one:
+  ca_file: '/etc/pki/tls/certs/ca-bundle.crt' # CentOS
+  #ca_file: '/etc/ssl/certs/ca-certificates.crt' # Debian
+  #ca_file: '/etc/ssl/certs/ca-certificates.crt' # Gentoo
 
   # Secure websocket confguration (wss://).
   # Requires SSL cert and key
@@ -72,6 +71,10 @@ defaults: &defaults
   admins:
     - 'example_user1dsioaioedfhgoiesajdigtoearogjaidofgjo'
 
+  # Mount resque-web into routes
+  # This allows an administrator to see info about the workers
+  mount_resque_web: true
+
   # Logging setup
 
   # Enable extensive logging to log/{development,test,production}.log
@@ -119,8 +122,14 @@ defaults: &defaults
   # connection or 'sendmail' to use the sendmail binary, or messagebus, to use the messagebus service
   mailer_method: 'smtp'
 
+  #API key if you are using message bus
+  message_bus_api_key: ''
+
   # The path to the sendmail binary. Ignored if mailer_method is not set to sendmail
   sendmail_location: '/usr/sbin/sendmail'
+  
+  # Set this to true if you want to use exim and sendmail
+  sendmail_exim_fix: false
 
   # Authentication required to send mail. Use one of 'one', 'plain',
   # 'login' or 'cram-md5'. Use 'none' if server does not support
@@ -148,6 +157,28 @@ defaults: &defaults
   # Sender address in Diaspora's outgoing mail.
   smtp_sender_address: 'no-reply@joindiaspora.com'
 
+  # Redis cache
+
+  # Enable the cache layer (Redis)
+  # If you expect to have thousands of users on your pod,
+  # we *highly* suggest you enable this.
+  # IMPORTANT: THE CACHE REQUIRES REDIS 2.4 OR LATER.
+  #
+  # By default, the cache layer will piggyback off of the Redis
+  # database used by your Resque workers.
+  redis_cache: false
+
+  # The location of your redis cache.
+  # IMPORTANT: DO NOT CHANGE THIS IF YOU DO NOT KNOW WHAT YOU ARE DOING!
+  #
+  # Leave this blank to use the same Redis database
+  # that your Resque workers use (happy path).
+  #
+  # This takes an ip (or DNS record).  It assumes that your Redis database
+  # is running on the default Redis port.
+  redis_location: ''
+
+
   # Web tracking
 
   # google analytics key - if false, no javascript included
@@ -165,31 +196,10 @@ defaults: &defaults
   cloudfiles_api_key:  'abc123'
 
   # Donations
-
+  
+  # Leave this blank to not show the request for donations
   # Use paypal for recurring donations
   paypal_hosted_button_id: ""
-
-  # Mount resque-web into routes
-  # This allows an administrator to see info about the workers
-  mount_resque_web: true
-
-  # Enable the cache layer (Redis)
-  # If you expect to have thousands of users on your pod,
-  # we *highly* suggest you enable this.
-  #
-  # By default, the cache layer will piggyback off of the Redis
-  # database used by your Resque workers.
-  redis_cache: false
-
-  # The location of your redis cache.
-  # IMPORTANT: DO NOT CHANGE THIS IF YOU DO NOT KNOW WHAT YOU ARE DOING!
-  # 
-  # Leave this blank to use the same Redis database
-  # that your Resque workers use (happy path).
-  # 
-  # This takes an ip (or DNS record).  It assumes that your Redis database
-  # is running on the default Redis port.
-  redis_location: ''
 
 #
 # Use this section to override default settings in specific environments
@@ -201,7 +211,6 @@ development:
 
 production:
   <<: *defaults
-  mount_resque_web: false
 
 #
 # Do not touch unless you know what you're doing

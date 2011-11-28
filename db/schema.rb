@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111018010003) do
+ActiveRecord::Schema.define(:version => 20111101202137) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -47,18 +48,23 @@ ActiveRecord::Schema.define(:version => 20111018010003) do
   add_index "aspects", ["user_id", "contacts_visible"], :name => "index_aspects_on_user_id_and_contacts_visible"
   add_index "aspects", ["user_id"], :name => "index_aspects_on_user_id"
 
+  create_table "blocks", :force => true do |t|
+    t.integer "user_id"
+    t.integer "person_id"
+  end
+
   create_table "comments", :force => true do |t|
-    t.text     "text",                                                      :null => false
-    t.integer  "commentable_id",                                            :null => false
-    t.integer  "author_id",                                                 :null => false
-    t.string   "guid",                                                      :null => false
+    t.text     "text",                                        :null => false
+    t.integer  "commentable_id",                              :null => false
+    t.integer  "author_id",                                   :null => false
+    t.string   "guid",                                        :null => false
     t.text     "author_signature"
     t.text     "parent_author_signature"
     t.text     "youtube_titles"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "likes_count",                           :default => 0,      :null => false
-    t.string   "commentable_type",        :limit => 60, :default => "Post", :null => false
+    t.integer  "likes_count",             :default => 0,      :null => false
+    t.string   "commentable_type",        :default => "Post", :null => false
   end
 
   add_index "comments", ["author_id"], :name => "index_comments_on_person_id"
@@ -109,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20111018010003) do
     t.string   "service"
     t.string   "identifier"
     t.boolean  "admin",        :default => false
+    t.string   "language",     :default => "en"
   end
 
   add_index "invitations", ["aspect_id"], :name => "index_invitations_on_aspect_id"
@@ -364,12 +371,12 @@ ActiveRecord::Schema.define(:version => 20111018010003) do
   add_index "services", ["user_id"], :name => "index_services_on_user_id"
 
   create_table "share_visibilities", :force => true do |t|
-    t.integer  "shareable_id",                                     :null => false
+    t.integer  "shareable_id",                       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "hidden",                       :default => false,  :null => false
-    t.integer  "contact_id",                                       :null => false
-    t.string   "shareable_type", :limit => 60, :default => "Post", :null => false
+    t.boolean  "hidden",         :default => false,  :null => false
+    t.integer  "contact_id",                         :null => false
+    t.string   "shareable_type", :default => "Post", :null => false
   end
 
   add_index "share_visibilities", ["contact_id"], :name => "index_post_visibilities_on_contact_id"
@@ -383,6 +390,10 @@ ActiveRecord::Schema.define(:version => 20111018010003) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "tag_followings", ["tag_id", "user_id"], :name => "index_tag_followings_on_tag_id_and_user_id", :unique => true
+  add_index "tag_followings", ["tag_id"], :name => "index_tag_followings_on_tag_id"
+  add_index "tag_followings", ["user_id"], :name => "index_tag_followings_on_user_id"
 
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id"
@@ -415,32 +426,33 @@ ActiveRecord::Schema.define(:version => 20111018010003) do
   create_table "users", :force => true do |t|
     t.string   "username"
     t.text     "serialized_private_key"
-    t.boolean  "getting_started",                       :default => true,  :null => false
-    t.boolean  "disable_mail",                          :default => false, :null => false
+    t.boolean  "getting_started",                                   :default => true,  :null => false
+    t.boolean  "disable_mail",                                      :default => false, :null => false
     t.string   "language"
-    t.string   "email",                                 :default => "",    :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
-    t.string   "invitation_token",       :limit => 60
+    t.string   "email",                                             :default => "",    :null => false
+    t.string   "encrypted_password",                 :limit => 128, :default => "",    :null => false
+    t.string   "invitation_token",                   :limit => 60
     t.datetime "invitation_sent_at"
     t.string   "reset_password_token"
     t.string   "remember_token"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",                                     :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "invitation_service",     :limit => 127
-    t.string   "invitation_identifier",  :limit => 127
+    t.string   "invitation_service",                 :limit => 127
+    t.string   "invitation_identifier",              :limit => 127
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
-    t.string   "authentication_token",   :limit => 30
+    t.string   "authentication_token",               :limit => 30
     t.string   "unconfirmed_email"
-    t.string   "confirm_email_token",    :limit => 30
+    t.string   "confirm_email_token",                :limit => 30
     t.datetime "locked_at"
+    t.boolean  "show_community_spotlight_in_stream",                :default => true,  :null => false
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

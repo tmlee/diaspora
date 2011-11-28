@@ -25,7 +25,10 @@ require 'cucumber/api_steps'
 Capybara.default_selector = :css
 
 # We have a ridiculously high wait time to account for build machines of various beefiness.
-Capybara.default_wait_time = 30
+# Capybara.default_wait_time = 30
+
+# While there are a lot of failures, wait less, avoiding travis timeout
+Capybara.default_wait_time = 3
 
 # If you set this to false, any error raised from within your app will bubble
 # up to your step definition and out to cucumber unless you catch it somewhere
@@ -55,11 +58,14 @@ require File.join(File.dirname(__FILE__), "..", "..", "spec", "support","user_me
 include HelperMethods
 
 Before do
+  @no_follow_diaspora_hq_setting = AppConfig[:no_follow_diasporahq]
+  AppConfig[:no_follow_diasporahq] = true
   DatabaseCleaner.clean
   Devise.mailer.deliveries = []
 end
 
 After do
+  AppConfig[:no_follow_diasporahq] = @no_follow_diaspora_hq_setting
   if Capybara.current_session.driver.respond_to?(:browser)
     Capybara.current_session.driver.browser.manage.delete_all_cookies
   end
