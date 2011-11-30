@@ -13,8 +13,14 @@ gem 'devise', '~> 1.3.1'
 gem 'devise_invitable', '0.5.0'
 gem 'jwt', "0.1.3"
 gem 'oauth2-provider', '0.0.16'
-gem 'omniauth', '0.2.6'
-gem 'twitter', '1.5.0'
+
+#omniauth
+gem 'omniauth', '1.0.1'
+gem 'omniauth-tumblr'
+gem 'omniauth-facebook'
+gem 'omniauth-twitter'
+
+gem 'twitter', '~> 2.0.0'
 
 # backups
 
@@ -39,11 +45,11 @@ gem 'sqlite3' if ENV['DB'] == 'all' || ENV['DB'] == 'sqlite'
 
 # file uploading
 
-gem 'aws', '2.3.32' # upgrade to 2.4 breaks 1.8 >.<
-gem 'carrierwave', '0.5.3'
-gem 'excon', '0.2.4'
+#gem 'aws', '2.3.32' # upgrade to 2.4 breaks 1.8 >.<
+gem 'carrierwave', '0.5.8'
+#gem 'excon', '0.2.4'
 gem 'fastercsv', '1.5.4', :require => false
-gem 'fog', '0.3.25'
+#gem 'fog', '0.3.25'
 gem 'jammit', '0.5.4'
 gem 'mini_magick', '3.2'
 gem 'rest-client', '1.6.1'
@@ -61,7 +67,7 @@ gem 'rails-i18n'
 
 # parsing
 
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.5.0'
 gem 'redcarpet', "2.0.0b5"
 gem 'roxml', :git => 'git://github.com/Empact/roxml.git', :ref => '7ea9a9ffd2338aaef5b0'
 gem 'ruby-oembed'
@@ -116,8 +122,8 @@ group :test, :development do
 end
 
 group :test do
-  gem 'capybara', '~> 0.3.9'
-  gem 'cucumber-rails', '0.3.2'
+  gem 'capybara', '1.1.2'
+  gem 'cucumber-rails', '1.2.0'
   gem 'cucumber-api-steps', :require => false
   gem 'database_cleaner', '0.6.0'
   gem 'diaspora-client', :git => 'git://github.com/diaspora/diaspora-client.git'

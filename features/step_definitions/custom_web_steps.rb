@@ -137,9 +137,9 @@ When /^I attach the file "([^\"]*)" to hidden element "([^\"]*)"(?: within "([^\
   JS
 
   if selector
-    When "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\" within \"#{selector}\""
+    When "I attach the file \"#{path}\" to \"#{field}\" within \"#{selector}\""
   else
-    When "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\""
+    When "I attach the file \"#{path}\" to \"#{field}\""
   end
 
   page.execute_script <<-JS
