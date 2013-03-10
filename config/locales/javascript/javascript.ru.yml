@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 ru:
@@ -8,16 +9,15 @@ ru:
     aspect_dropdown:
       add_to_aspect: "Добавить контакт"
       all_aspects: "Все аспекты"
-      error: "Невозможно начать делиться с пользователем {{name}}.  Возможно, вы его заблокировали?"
+      error: "Невозможно начать делиться с пользователем <%= name %>.  Возможно, вы его заблокировали?"
       select_aspects: "Выбрать аспекты"
-      started_sharing_with: "Вы начали делиться с {{name}}!"
-      stopped_sharing_with: "Вы перестали делиться с {{name}}."
+      started_sharing_with: "Вы начали делиться с <%= name %>!"
+      stopped_sharing_with: "Вы перестали делиться с <%= name %>."
       toggle:
-        few: "В {{count}} аспектах"
-        many: "В {{count}} аспектах"
-        one: "В {{count}} аспектах"
-        other: "В {{count}} аспектах"
-        two: "В {{count}} аспектах"
+        few: "В <%= count %> аспектах"
+        many: "В <%= count %> аспектах"
+        one: "В <%= count %> аспекте"
+        other: "В <%= count %> аспектах"
         zero: "Выбрать аспекты"
     aspect_navigation:
       deselect_all: "Выключить все"
@@ -27,15 +27,35 @@ ru:
       hide: "скрыть комментарии"
       show: "Показать все комментарии"
     confirm_dialog: "Вы уверены? "
+    delete: "Удалить"
     failed_to_like: "Не удалось!"
     failed_to_post_message: "Не удалось отправить сообщение!"
     getting_started:
       alright_ill_wait: "Хорошо, я подожду."
-      hey: "Привет, {{name}}!"
+      hey: "Привет, <%= name %>!"
       no_tags: "Вы не следите ни за одной меткой! Все равно продолжить?"
       preparing_your_stream: "Подготовка вашего личного потока..."
+    header:
+      admin: "Администратор"
+      close: "закрыть"
+      contacts: "Контакты"
+      home: "Главная"
+      log_out: "Выйти"
+      mark_all_as_read: "Пометить как прочитанные"
+      messages: "Сообщения"
+      notifications: "Уведомления"
+      profile: "Профиль"
+      recent_notifications: "Последние уведомления"
+      search: "Поиск"
+      settings: "Настройки"
+      view_all: "Посмотреть все"
+    ignore: "Блокировать"
     infinite_scroll:
       no_more: "Сообщений больше нет."
+    my_activity: "Моя активность"
+    my_stream: "Поток"
+    people:
+      not_found: "и не найдено никого..."
     photo_uploader:
       looking_good: "Боже мой, вы выглядите потрясающе!"
     publisher:
@@ -44,10 +64,44 @@ ru:
       public: "Публичная - ваша запись будет видна всем, включая поисковые системы"
     reshares:
       duplicate: "Настолько круто, да? Вы уже поделились этой записью!"
-    search_for: "Искать {{name}}"
+      post: "Поделиться записью пользователя <%= name %>?"
+      successful: "Вы успешно поделились записью!"
+    search_for: "Искать <%= name %>"
     show_more: "показать больше"
+    stream:
+      comment: "Комментировать"
+      follow: "Следить"
+      hide: "Скрыть"
+      hide_nsfw_posts: "Скрыть записи #nsfw"
+      like: "Мне нравится"
+      likes:
+        few: "Понравилось: <%= count %>"
+        many: "Понравилось: <%= count %>"
+        one: "Понравилось: <%= count %>"
+        other: "Понравилось: <%= count %>"
+        zero: "Понравилось: <%= count %>"
+      limited: "Ограниченная"
+      more_comments:
+        few: "Еще <%= count %> комментария"
+        many: "Еще <%= count %> комментариев"
+        one: "Еще <%= count %> комментарий"
+        other: "Еще <%= count %> комментариев"
+        zero: "Еще <%= count %> комментариев"
+      original_post_deleted: "Исходная запись удалена автором."
+      public: "Публичная"
+      reshare: "Поделиться"
+      reshares:
+        few: "Поделились: <%= count %>"
+        many: "Поделились: <%= count %>"
+        one: "Поделились: <%= count %>"
+        other: "Поделились: <%= count %>"
+        zero: "Поделились: <%= count %>"
+      show_nsfw_post: "Показать запись"
+      show_nsfw_posts: "Показать все"
+      unfollow: "Не следить"
+      unlike: "Не нравится"
     tags:
-      wasnt_that_interesting: "Что ж, видимо, метка #{{tagName}} была не такой уж интересной..."
+      wasnt_that_interesting: "Что ж, видимо, метка #<%= tagName %> была не такой уж интересной..."
     timeago:
       day: "день"
       days: "%d дней[-я]"
@@ -66,6 +120,13 @@ ru:
       years: "%d лет"
     videos:
       unknown: "Неизвестный видеоформат"
-      watch: "Смотреть это видео на {{provider}}"
-    web_sockets:
-      disconnected: "WebSocket закрыт; сообщения больше не будут транслироваться в прямом эфире."
+      watch: "Смотреть это видео на <%= provider %>"
+    viewer:
+      comment: "Комментировать"
+      follow_post: "Следить за записью"
+      home: "ДОМОЙ"
+      like: "Мне нравится"
+      reshare: "Поделиться"
+      reshared: "Поделились"
+      stop_following_post: "Не следить за записью"
+      unlike: "Мне не нравится"

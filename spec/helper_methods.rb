@@ -61,4 +61,22 @@ module HelperMethods
     fixture_name = File.join(File.dirname(__FILE__), 'fixtures', fixture_filename)
     File.open(fixture_name)
   end
+
+  def create_conversation_with_message(sender, recipient_person, subject, text)
+    create_hash = {
+      :author => sender.person,
+      :participant_ids => [sender.person.id, recipient_person.id],
+      :subject => subject,
+      :messages_attributes => [ {:author => sender.person, :text => text} ]
+    }
+
+    Conversation.create!(create_hash)
+  end
+
+  def get_response_for_user_agent(app, userAgent)
+    env = Rack::MockRequest.env_for('/', "HTTP_USER_AGENT" => userAgent)
+    status, headers, body = app.call(env)
+    body.close if body.respond_to?(:close) # avoids deadlock after 3 tests
+    ActionDispatch::TestResponse.new(status, headers, body)
+  end
 end

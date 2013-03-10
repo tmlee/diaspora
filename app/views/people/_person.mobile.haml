@@ -3,11 +3,11 @@
 -#   the COPYRIGHT file.
 
 .stream_element{:id => person.id}
-  = person_image_link(person)
 
   .content
+    =person_image_link(person)
     %span.from
       =person_link(person)
 
     .info
-      = link_to person.diaspora_handle, person_path(person), :class => 'black'
+      = link_to person.diaspora_handle, local_or_remote_person_path(person), :class => 'black'

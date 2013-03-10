@@ -1,14 +1,78 @@
+module ScreenshotCukeHelpers
+
+  def set_screenshot_location(path)
+    @screenshot_path = Rails.root.join('tmp','screenshots', path)
+    @screenshot_path.mkpath unless @screenshot_path.exist?
+  end
+
+  def take_screenshot(name, path)
+    visit send("#{path}_path")
+    browser = page.driver.browser
+    pic = @screenshot_path.join("#{name}.png")
+
+    sleep 0.5
+
+    browser.manage.window.resize_to(1280, 1024)
+    browser.save_screenshot(pic)
+  end
+
+  def take_screenshots_without_login
+    pages = {
+      'register' => 'new_user_registration',
+      'login'    => 'user_session'
+    }
+
+    pages.each do |name, path|
+      take_screenshot name, path
+    end
+  end
+
+  def take_screenshots_with_login
+    pages = {
+      'stream'        => 'stream',
+      'activity'      => 'activity_stream',
+      'mentions'      => 'mentioned_stream',
+      'aspects'       => 'aspects_stream',
+      'tags'          => 'followed_tags_stream',
+      'contacts'      => 'contacts',
+      'settings'      => 'edit_user',
+      'notifications' => 'notifications',
+      'conversations' => 'conversations',
+      'logout'        => 'destroy_user_session'
+    }
+
+    pages.each do |name, path|
+      take_screenshot name, path
+    end
+  end
+
+end
+World(ScreenshotCukeHelpers)
+
+
 When /^(.*) in the header$/ do |action|
   within('header') do
-    When action
+    step action
+  end
+end
+
+And /^I submit the form$/ do
+  click_button :submit
+end
+
+Then /^the "([^"]*)" field should have a validation error$/ do |field|
+  find_field(field).has_xpath?(".//ancestor::div[contains(@class, 'control-group')]/div[contains(@class, 'field_with_errors')]")
+end
+
+
+Then /^following field[s]? should have validation error[s]?:$/ do |fields|
+  fields.raw.each do |field|
+    step %{the "#{field[0]}" field should have a validation error}
   end
 end
 
 And /^I expand the publisher$/ do
-  page.execute_script('
-    $("#publisher").removeClass("closed");
-    $("#publisher").find("textarea").focus();
-    ')
+ click_publisher
 end
 
 When 'I click the aspects title' do
@@ -25,35 +89,27 @@ And /^I toggle the aspect "([^"]*)"$/ do |aspect_name|
 end
 
 Then /^the publisher should be collapsed$/ do
-	find("#publisher")["class"].should include("closed")
+  find("#publisher")["class"].should include("closed")
 end
 
 Then /^the publisher should be expanded$/ do
-	find("#publisher")["class"].should_not include("closed")
+  find("#publisher")["class"].should_not include("closed")
 end
 
 When /^I append "([^"]*)" to the publisher$/ do |stuff|
-  # Wait for the publisher to appear and all the elements to lay out
-  wait_until { evaluate_script("$('#status_message_fake_text').focus().length == 1") }
+  elem = find('#status_message_fake_text')
+  elem.native.send_keys(' ' + stuff)
 
-  # Write to the placeholder field and trigger a keyup to start the copy
-  page.execute_script <<-JS
-    $('#status_message_fake_text').val($('#status_message_fake_text').val() + '#{stuff}');
-    $('#status_message_fake_text').keyup();
-  JS
-
-  # Wait until the text appears in the placeholder
   wait_until do
-    evaluate_script("$('#status_message_fake_text').val().match(/#{stuff}/) != null")
+    find('#status_message_text').value.include?(stuff)
   end
+end
 
-  # WAIT FOR IT!...
-
-  # Wait until the text copy is finished
-  wait_until do
-    evaluate_script <<-JS
-      $('#status_message_text').val() && ($('#status_message_text').val().match(/#{stuff}/) != null)
-    JS
+And /^I want to mention (?:him|her) from the profile$/ do
+  click_link("Mention")
+  wait_for_ajax_to_finish
+  within('#facebox') do
+    click_publisher
   end
 end
 
@@ -66,7 +122,7 @@ When /^I click to delete the first post$/ do
 end
 
 When /^I click to delete the first comment$/ do
-  page.execute_script('$(".comment.posted").first().find(".comment_delete").click()')
+  find(".comment").find(".comment_delete").click()
 end
 
 When /^I click to delete the first uploaded photo$/ do
@@ -91,7 +147,7 @@ end
 
 When /^(.*) in the modal window$/ do |action|
   within('#facebox') do
-    When action
+    step action
   end
 end
 
@@ -115,16 +171,16 @@ end
 
 Then /^(?:|I )should not see a "([^\"]*)"(?: within "([^\"]*)")?$/ do |selector, scope_selector|
   with_scope(scope_selector) do
-    if page.has_css?(selector)
-      find(:css, selector).visible?.should be_false
-    else
-      page.has_css?(selector).should be_false
-    end
+    page.has_css?(selector, :visible => true).should be_false
   end
 end
 
+Then /^page should (not )?have "([^\"]*)"$/ do |negate, selector|
+  page.has_css?(selector).should ( negate ? be_false : be_true )
+end
+
 When /^I wait for the ajax to finish$/ do
-  wait_until(30) { evaluate_script("$.active") == 0 }
+  wait_for_ajax_to_finish
 end
 
 When /^I have turned off jQuery effects$/ do
@@ -137,9 +193,9 @@ When /^I attach the file "([^\"]*)" to hidden element "([^\"]*)"(?: within "([^\
   JS
 
   if selector
-    When "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\" within \"#{selector}\""
+    step "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\" within \"#{selector}\""
   else
-    When "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\""
+    step "I attach the file \"#{Rails.root.join(path).to_s}\" to \"#{field}\""
   end
 
   page.execute_script <<-JS
@@ -152,12 +208,9 @@ Then /^I should get download alert$/ do
 end
 
 When /^I search for "([^\"]*)"$/ do |search_term|
-  When "I fill in \"q\" with \"#{search_term}\""
-  page.execute_script <<-JS
-    var e = jQuery.Event("keypress");
-    e.keyCode = 13;
-    $("#q").trigger(e);
-  JS
+  fill_in "q", :with => search_term
+  find_field("q").native.send_key(:enter)
+  sleep(2)
 end
 
 Then /^the "([^"]*)" field(?: within "([^"]*)")? should be filled with "([^"]*)"$/ do |field, selector, value|
@@ -174,18 +227,16 @@ Then /^the "([^"]*)" field(?: within "([^"]*)")? should be filled with "([^"]*)"
 end
 
 Then /^I should see (\d+) posts$/ do |n_posts|
-  wait_until(30) { all("#main_stream .stream_element").length == n_posts.to_i }
+  has_css?("#main_stream .stream_element", :count => n_posts.to_i).should be_true
 end
 
 Then /^I should see (\d+) contacts$/ do |n_posts|
-  wait_until(30) { all("#people_stream .stream_element").length == n_posts.to_i }
+  has_css?("#people_stream .stream_element", :count => n_posts.to_i).should be_true
 end
 
 And /^I scroll down$/ do
   evaluate_script("window.scrollBy(0,3000000)")
-  sleep 1
-  wait_until(30) { evaluate_script('$("#infscr-loading:visible").length') == 0 }
-  And "I wait for the ajax to finish"
+  step "I wait for the ajax to finish"
 end
 
 Then /^the notification dropdown should be visible$/ do
@@ -201,15 +252,15 @@ end
 Then /^I follow Edit Profile in the same window$/ do
   page.execute_script("$('a[href=\"#{edit_profile_path}\"]').removeAttr('target')")
 
-  And %(I follow "Edit Profile")
+  step %(I follow "Edit Profile")
 end
 
 Then 'I should see an image attached to the post' do
-  Then %{I should see a "img" within ".stream_element div.photo_attachments"}
+  step %{I should see a "img" within ".stream_element div.photo_attachments"}
 end
 
 Then 'I press the attached image' do
-  Then %{I press the 1st "img" within ".stream_element div.photo_attachments"}
+  step %{I press the 1st "img" within ".stream_element div.photo_attachments"}
 end
 
 And "I wait for the popovers to appear" do
@@ -229,4 +280,32 @@ end
 
 Then /^I should not see ajax loader on deletion link place$/ do
   page.evaluate_script("$('.hide_loader').first().css('display')").should == "none"
+end
+
+Then /^I should see a flash message indicating success$/ do
+  flash_message_success?
+end
+
+Then /^I should see a flash message indicating failure$/ do
+  flash_message_failure?
+end
+
+Then /^I should see a flash message containing "(.+)"$/ do |text|
+  flash_message_containing? text
+end
+
+Given /^the reference screenshot directory is used$/ do
+  set_screenshot_location 'reference'
+end
+
+Given /^the comparison screenshot directory is used$/ do
+  set_screenshot_location 'current'
+end
+
+When /^I take the screenshots while logged out$/ do
+  take_screenshots_without_login
+end
+
+When /^I take the screenshots while logged in$/ do
+  take_screenshots_with_login
 end

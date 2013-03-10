@@ -4,7 +4,10 @@
 
 
 - content_for :head do
-  = include_javascripts :people
+  = javascript_include_tag :people
+  - if user_signed_in? && @person != current_user.person
+    :javascript
+      Mentions.options.prefillMention = Mentions._contactToMention(#{j @person.to_json});
 
 - content_for :page_title do
   = @person.name
@@ -26,21 +29,10 @@
   .stream_container
     = render 'people/sub_header', :person => @person, :contact => @contact
 
-    / hackity hack until we get a photo stream
-    - if (@posts && @posts.length > 0) || (@stream && @stream.stream_posts.length > 0)
-      -if @post_type == :photos
-        = render 'photos/index', :photos => @posts
-      - else
-        #main_stream.stream
-          = render 'shared/stream', :posts => @stream.stream_posts
-          #pagination
-            =link_to(t('more'), next_page_path, :class => 'paginate')
-
-    - else
-      #main_stream
+    #main_stream.stream
+      - if @block.present?
         %div{:style=>"text-align:center;", :class => "dull"}
-          - if @block.present?
-            = t('.ignoring', :name => @person.first_name)
-          - else
-            = t('.has_not_shared_with_you_yet', :name => @person.first_name)
-
+          = t('.ignoring', :name => @person.first_name)
+          
+    #paginate
+      %span.loader.hidden

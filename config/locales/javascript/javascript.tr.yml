@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 tr:
@@ -8,7 +9,7 @@ tr:
     aspect_dropdown:
       add_to_aspect: "Yönüne ekle"
       all_aspects: "Tüm yönler"
-      error: "Couldn't start sharing with {{name}}.  Are you ignoring them?"
+      error: "{{name}} ile paylaşım başlatılamadı. Onu yasaklamış olmayasınız?"
       select_aspects: "Yönleri seç"
       started_sharing_with: "{{name}} sizinle paylaşıma başladı!"
       stopped_sharing_with: "{{name}} sizinle paylaşımı durdurdu."
@@ -17,7 +18,6 @@ tr:
         many: "{{count}} yön"
         one: "{{count}} yön"
         other: "{{count}} yön"
-        two: "{{count}} yön"
         zero: "Yön seç"
     aspect_navigation:
       deselect_all: "Tümünü kaldır"
@@ -27,15 +27,35 @@ tr:
       hide: "yorumları gizle"
       show: "tüm yorumları görüntüle"
     confirm_dialog: "Emin misiniz?"
+    delete: "Sil"
     failed_to_like: "Beğenme başarısız oldu!"
     failed_to_post_message: "Gönderi başarısız oldu!"
     getting_started:
       alright_ill_wait: "Tamam, ben bekleyeceğim."
       hey: "Merhaba, {{name}}!"
       no_tags: "Hey, hiç etiket takip etmiyorsunuz! Gerçekten devam etmek istiyor musun?"
-      preparing_your_stream: "Kişiselleştirilmiş akışınız hazırlanıyor ..."
+      preparing_your_stream: "Kişiselleştirilmiş akışınız hazırlanıyor..."
+    header:
+      admin: "Yönetici"
+      close: "kapat"
+      contacts: "Kişiler"
+      home: "Ana Sayfa"
+      log_out: "Çıkış yap"
+      mark_all_as_read: "Tümünü okundu olarak işaretle"
+      messages: "Mesajlar"
+      notifications: "Bildirimler"
+      profile: "Profil"
+      recent_notifications: "Son Bildirimler"
+      search: "Find people or #tags"
+      settings: "Ayarlar"
+      view_all: "Tümünü gör"
+    ignore: "Yoksay"
     infinite_scroll:
       no_more: "Daha fazla gönderi yok."
+    my_activity: "Etkinliklerim"
+    my_stream: "Akış"
+    people:
+      not_found: "...ve hiç kimse bulunamadı."
     photo_uploader:
       looking_good: "OMG, harika görünüyorsun!"
     publisher:
@@ -44,8 +64,33 @@ tr:
       public: "Genel - gönderi herkes tarafından görünür ve arama motorları tarafından bulunur olacak"
     reshares:
       duplicate: "Bu iyi, değil mi? Zaten bu gönderiyi tekrar paylaştın!"
+      post: "<%= name %> kişisinin gönderisini yeniden paylaşamak istiyor musun?"
+      successful: "Gönderi başarıyla yeniden paylaşıldı!"
     search_for: "{{name}} Ara"
     show_more: "daha fazlasını göster"
+    stream:
+      comment: "Yorum"
+      follow: "İzle"
+      hide: "Gizle"
+      hide_nsfw_posts: "#nsfw gönderilerin gizle"
+      like: "Beğen"
+      likes:
+        other: "<%= count %> Beğeni"
+        zero: "<%= count %> Beğeni"
+      limited: "Sınırlı"
+      more_comments:
+        other: "Diğer <%= count %> yorum gör"
+        zero: "Diğer <%= count %> yorumu gör"
+      original_post_deleted: "İleti yazarı tarafından silindi."
+      public: "Genel"
+      reshare: "Yeniden paylaş"
+      reshares:
+        other: "<%= count %> Yeniden paylaşma"
+        zero: "<%= count %> Yeniden paylaşma"
+      show_nsfw_post: "İletiyi görüntüle"
+      show_nsfw_posts: "Tümünü göster"
+      unfollow: "İzlemeyi durdur"
+      unlike: "Beğenme"
     tags:
       wasnt_that_interesting: "Tamam, benim #{{tagName}} o kadar da ilginç değil..."
     timeago:
@@ -67,5 +112,12 @@ tr:
     videos:
       unknown: "Bilinmeyen video tipi"
       watch: "Bu videoyu {{provider}}'da izle"
-    web_sockets:
-      disconnected: "Websocket kapalı; gönderiler bundan sonra canlı akış olacak."
+    viewer:
+      comment: "Yorum"
+      follow_post: "İletiyi izle"
+      home: "ANA SAYFA"
+      like: "Beğen"
+      reshare: "Yeniden paylaş"
+      reshared: "Yeniden paylaştı"
+      stop_following_post: "İletiyi izlemeyi durdur"
+      unlike: "Beğenme"

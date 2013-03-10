@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 eu:
@@ -19,7 +20,7 @@ eu:
       unauthenticated: "Izena eman edo autentikatu behar duzu jarraitu aurretik"
       unconfirmed: "Zure kontua baieztatu behar duzu jarraitu aurretik."
     invitations:
-      invitation_token_invalid: "Gonbidapen kodea ez da baliozkoa!"
+      invitation_token_invalid: "Sentitzen dugu, baina gonbidapen kodea ez da baliozkoa."
       send_instructions: "Gonbidapena bidali duzu."
       updated: "Zure pasahitza arrakastaz ezarri duzu. Sartu egin zara."
     mailer:
@@ -30,33 +31,33 @@ eu:
       hello: "Kaixo %{email}!"
       invitation_instructions:
         accept: "Gonbidapena"
-        arrived: "The social network you have been waiting for has arrived. Revamped, more secure, and more fun, %{strong_diaspora} is ready to help you share and explore the web in a whole new way."
-        be_yourself: "Be Yourself"
-        be_yourself_paragraph: "The Internet has created unique new ways for us to express ourselves. %{strong_diaspora} lets you be yourself and share however you want, with or without your real name."
-        cubbies: Cubbi.es
-        displaying_correctly: "Email not displaying correctly? %{link} in your browser"
-        email_address: questions@joindiaspora.com
-        email_us: "For general inquiries or support with your Diaspora account, please email us at %{email}."
-        finally: "Finally - it's here"
-        friends_saying: "What your friends are saying..."
-        get_connected: "Get Connected"
-        get_connected_paragraph: "An international movement with a shared vision for a better web, %{strong_diaspora}'s #1 feature is its community. Meet new people, connect with friends, and join the fun."
-        have_fun: "Have Fun"
-        have_fun_paragraph: "%{strong_diaspora} is all about discovering amazing new content and people online. %{link}, the world's first %{strong_diaspora} application is just the begining. Collect and share the web in all of its glory."
-        help_fund: "help fund Diaspora"
-        here: "here"
+        arrived: "Espero zenuen sare soziala iritsi da. Berria, seguruago, eta dibertigarriagoa, %{strong_diaspora} prest dago weba partekatu eta esploratzeko modu berri batean."
+        be_yourself: "Izan Zaitez Zu Zeu"
+        be_yourself_paragraph: "Internetek aditzera emateko bide berriak sortu ditu. %{strong_diaspora}k zu zeu izaten eta nahi duzuna partekatzen ahalbidetzen du, bai zure izena erabiliz, bai gabe."
+        cubbies: "Cubbi.es"
+        displaying_correctly: "Emaila ez da ondo ikusten? %{link}"
+        email_address: "questions@joindiaspora.com"
+        email_us: "Galdera orrokorrentzako, bidali mezu bat bidali %{email}(e)ra."
+        finally: "Azkenik - iritsi da"
+        friends_saying: "Zure lagunak esaten ari direna..."
+        get_connected: "Konektatu Zaitez"
+        get_connected_paragraph: "Mugimendu internazional bat, web hobe baten ikuspegi batekin, %{strong_diaspora} garrantz<itsu egiten duena haren komunitatea da. Ezagutu jende berria, konektatu lagunekin, eta dibertitu zaitez."
+        have_fun: "Dibertitu Zaitez"
+        have_fun_paragraph: "%{strong_diaspora} edukin eta jende berria ezagutzean datza. %{link}, munduko lehenengo %{strong_diaspora} aplikazioa hasiera da soilik. Arakatu eta partekatu weba ezinhobean!"
+        help_fund: "lagundu diruaz Diaspora"
+        here: "hemen"
         ignore: "Ez baduzu gonbidapena onartu nahi, mesedez egin iezaiozu ez-ikusi mezu honi."
-        join_team: "Join our Team"
-        love: "Love,"
-        made_by_people: "%{strong_diaspora} is made by people who love the Internet as much as you do. %{jointeam}, or %{helpfund}!"
-        more_people: "Even more people are excited to see you!"
+        join_team: "Batu gure Taldera"
+        love: "Adeitasunez,"
+        made_by_people: "%{strong_diaspora} zuk bezala Internet maite duen jendeak egin du. %{jointeam}, edo %{helpfund}!"
+        more_people: "Oraindik jende gehiago pozik daude zu ikusteaz!"
         no_account_till: "Zure kontua ez da sortuko hemengo esteka jarraitu eta izena eman arte."
-        or: "or"
-        sign_up_now: "Sign up now &rarr;"
+        or: "edo"
+        sign_up_now: "Izena eman orain →"
         subject: "Diasporara batzera gonbidatua izan zara!"
-        team_diaspora: "Team Diaspora"
-        unsubscribe: "To unsubscribe please click %{link}."
-        view_in: "View in"
+        team_diaspora: "Diaspora Taldea"
+        unsubscribe: "Harpidetza ezezteko sakatu %{link}."
+        view_in: "Ikus ezazu zure nabigatzailean."
       inviter:
         accept_at: "%{url}(e)n, onartu dezakezu beheko esteka jarraituz."
         has_invited_you: "%{name}"
@@ -89,7 +90,7 @@ eu:
     sessions:
       new:
         alpha_software: "Alpha softwarea erabiltzear zaude."
-        bugs_and_feedback: "Jakin dezazula aktsak aurkituko dituzula. Feedback botoia erabiltzera animatzen zaitugu (eskubian) edozein akats bidaltzeko! Ahal dugun azkarren konponduko dugu."
+        bugs_and_feedback: "Jakin dezazula akatsak aurkituko dituzula. Feedback botoia erabiltzera animatzen zaitugu (eskubian) edozein akats bidaltzeko! Ahal dugun azkarren konponduko dugu."
         bugs_and_feedback_mobile: "Jakin dezazula akatsak aurkitu dituzula. Akatsak bidaltzera animatzen zaitugu! Ahal dugun azkarren egingo dugu lan horiek konpontzeko."
         login: "Sartu"
         modern_browsers: "bakarrik nabigatzaile modernoak onartzen ditu."

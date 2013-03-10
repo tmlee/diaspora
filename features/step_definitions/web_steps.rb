@@ -4,7 +4,6 @@
 # instead of editing this one. Cucumber will automatically load all features/**/*.rb
 # files.
 
-
 require 'uri'
 require 'cgi'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "support", "paths"))
@@ -64,7 +63,7 @@ end
 When /^(?:|I )fill in the following(?: within "([^"]*)")?:$/ do |selector, fields|
   with_scope(selector) do
     fields.rows_hash.each do |name, value|
-      When %{I fill in "#{name}" with "#{value}"}
+      step %{I fill in "#{name}" with "#{value}"}
     end
   end
 end
@@ -106,12 +105,14 @@ Then /^(?:|I )should see JSON:$/ do |expected_json|
   expected.should == actual
 end
 
-Then /^(?:|I )should see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_content(text)
-    else
-      assert page.has_content?(text)
+Then /^(?:|I )should see (\".+?\"[\s]*)(?:[\s]+within[\s]* "([^"]*)")?$/ do |vars,selector|
+  vars.scan(/"([^"]+?)"/).flatten.each do |text|
+    with_scope(selector) do
+      if page.respond_to? :should
+        page.should have_content(text)
+      else
+        assert page.has_content?(text)
+      end
     end
   end
 end
@@ -127,12 +128,14 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^"]*)")?$/ do |regexp, select
   end
 end
 
-Then /^(?:|I )should not see "([^"]*)"(?: within "([^"]*)")?$/ do |text, selector|
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_no_content(text)
-    else
-      assert page.has_no_content?(text)
+Then /^(?:|I )should not see (\".+?\"[\s]*)(?:[\s]+within[\s]* "([^"]*)")?$/ do |vars,selector|
+  vars.scan(/"([^"]+?)"/).flatten.each do |text|
+    with_scope(selector) do
+      if page.respond_to? :should
+        page.should have_no_content(text)
+      else
+        assert page.has_no_content?(text)
+      end
     end
   end
 end
@@ -195,7 +198,11 @@ Then /^the "([^"]*)" checkbox(?: within "([^"]*)")? should not be checked$/ do |
 end
 
 Then /^(?:|I )should be on (.+)$/ do |page_name|
-  current_path = URI.parse(current_url).path
+  wait_until(3) do
+    current_path = URI.parse(current_url).path
+    current_path == path_to(page_name)
+  end
+
   if current_path.respond_to? :should
     current_path.should == path_to(page_name)
   else

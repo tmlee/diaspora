@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 is:
@@ -33,22 +34,20 @@ is:
         arrived: "Hér er loksins komið samskiptanetið sem þú hefur beðið eftir. %{strong_diaspora} er hressara, öruggara og skemmtilegra, og tilbúið fyrir það sem þú vilt skoða eða deila með vefnum, á nýjan hátt."
         be_yourself: "Vertu þú @{f:sjálf|m:sjálfur|sjálf(ur)}"
         be_yourself_paragraph: "Með Internetinu hafa orðið til nýjar leiðir fyrir okkur til að tjá okkur. Á %{strong_diaspora} færð þú að vera þú @{f:sjálf|m:sjálfur|sjálf(ur)} og deila því sem þú vilt, undir þínu rétta nafni eða ekki, eftir því sem þú vilt."
-        cubbies: Cubbi.es
         displaying_correctly: "Birtist netfangið ekki rétt? %{link}"
-        email_address: questions@joindiaspora.com
         email_us: "Almennar fyrirspurnir og fyrirspurnir sem varða Diasporaaðganginn þinn má senda á %{email}."
         finally: "Loksins, hérna er það komið"
         friends_saying: "Það sem vinir þínir segja..."
         get_connected: "Komdu í samband"
         get_connected_paragraph: "%{strong_diaspora} er alþjóðleg hreyfing sem sér fyrir sér betri vef. Samfélagið er það sem skiptir mestu máli. Komdu með, að kynnast fólki, að halda sambandi við vini þína og taka þátt í fjörinu."
         have_fun: "Skemmtu þér"
-        have_fun_paragraph: "%{strong_diaspora} is all about discovering amazing new content and people online. %{link}, the world's first %{strong_diaspora} application is just the begining. Collect and share the web in all of its glory."
+        have_fun_paragraph: "%{strong_diaspora} Snýst um að kynnast uppgötva nýjar hugmyndir og kynnast nýju fólki í gegnum Netið. %{link} er ekki nema upphafið. Safnaðu og dreifðu Vefnum í allri sinni dýrð."
         help_fund: "hjálpaðu til við að fjármagna Diaspora"
         here: "hér"
         ignore: "Ef þú vilt ekki þiggja boðið, biðjumst við afsökunar á þessum tölvupósti."
         join_team: "Taktu þátt"
         love: "Bestu kveðjur,"
-        made_by_people: "%{strong_diaspora} er búið til af fólki sem þykir vænt um Internetið eins og þér. %{jointeam}, or %{helpfund}!"
+        made_by_people: "%{strong_diaspora} er búið til af fólki sem þykir vænt um Internetið eins og þér. %{jointeam}, eða %{helpfund}!"
         more_people: "Enn fleiri eru spenntir að hitta þig!"
         no_account_till: "Aðgangurinn þinn verður ekki til fyrr en þú fylgir hlekknum hér fyrir ofan og stofnar nýjan aðgang."
         or: "eða"
@@ -56,10 +55,9 @@ is:
         subject: "Þér hefur verið boðið að vera með í Diaspora!"
         team_diaspora: "Diasporahópurinn"
         unsubscribe: "Smelltu %{link} til að segja upp áskriftinni."
-        view_in: "View in"
+        view_in: "Skoða í"
       inviter:
         accept_at: "á %{url}. Þú getur þegið boðið með því að fylgja hlekknum hér fyrir neðan."
-        has_invited_you: "%{name}"
         have_invited_you: "%{names} hafa boðið þér að vera með í Diaspora"
       reset_password_instructions:
         change: "Breyta lykilorðinu mínu"
@@ -75,7 +73,7 @@ is:
       welcome: "Velkomin/n %{email}!"
     passwords:
       edit:
-        change_password: "Breyta lykilorði mínu"
+        change_password: "Breyta lykilorði"
       new:
         forgot_password: "Gleymdirðu lykilorðinu þínu?"
         no_account: "Enginn notandi með þetta netfang ert til. Ef þú ert að bíða eftir boði, þá erum við að senda þau út eins fljótt og auðið er"
@@ -89,8 +87,8 @@ is:
     sessions:
       new:
         alpha_software: "Þú ert í þann veginn að nota alpha-hugbúnað (það þýðir að hann hefur ekki verið fullreyndur)."
-        bugs_and_feedback: "Hafðu fyrirvara um að þú munt rekast á galla í forritinu. Við hvetjum þig til að nota Feedback-hnappinn þér á hægri hönd til þess að tilkynna hvers kyns hiksta! Við munum vinna eins hratt og við getum að því að leysa þau mál sem þú tilkynnir."
-        bugs_and_feedback_mobile: "Hafðu fyrirvara um að þú munt rekast á galla í forritinu. Við hvetjum þig til að tilkynna hvers kyns hiksta! Við munum vinna eins hratt og við getum að því að leysa þau mál sem þú tilkynnir."
+        bugs_and_feedback: "Hafðu fyrirvara um að þú munt rekast á galla í forritinu. Við hvetjum þig til að nota Feedback-hnappinn þér á hægri hönd til þess að tilkynna hvers kyns hnökra! Við munum vinna eins hratt og við getum að því að leysa þau mál sem þú tilkynnir."
+        bugs_and_feedback_mobile: "Vertu viðbúinn hnökrum! Við reynum okkar besta til þess að laga tilkynnta hnökra."
         login: "Innskrá"
         modern_browsers: "styður einungis nýlega vafra."
         password: "Lykilorð"
@@ -118,4 +116,4 @@ is:
     messages:
       already_confirmed: "var nú þegar staðfestur"
       not_found: "fannst ekki"
-      not_locked: "var ekki læstur"
+      not_locked: "ólæstur"

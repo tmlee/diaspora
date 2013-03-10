@@ -4,20 +4,18 @@
 
 
 class Postzord::Receiver
-  require File.join(Rails.root, 'lib/postzord/receiver/private')
-  require File.join(Rails.root, 'lib/postzord/receiver/public')
+  require Rails.root.join('lib', 'postzord', 'receiver', 'private')
+  require Rails.root.join('lib', 'postzord', 'receiver', 'public')
 
   def perform!
-    if self.receive!
-      self.update_cache! if cache?
-    end
+    self.receive!
   end
 
-  # @return [Boolean]
-  def cache?
-    self.respond_to?(:update_cache!) && RedisCache.configured? &&
-      @object.respond_to?(:triggers_caching?) && @object.triggers_caching? &&
-      @object.respond_to?(:type) && RedisCache.acceptable_types.include?(@object.type)
+  def author_does_not_match_xml_author?
+    if (@author.diaspora_handle != xml_author)
+      FEDERATION_LOGGER.info("event=receive status=abort reason='author in xml does not match retrieved person' payload_type=#{@object.class} sender=#{@author.diaspora_handle}")
+      return true
+    end
   end
 end
 

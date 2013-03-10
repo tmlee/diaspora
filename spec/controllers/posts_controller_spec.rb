@@ -23,8 +23,6 @@ describe PostsController do
       it 'succeeds' do
         get :show, "id" => @message.id
         response.should be_success
-        doc.should have_link('Like')
-        doc.should have_link('Comment')
       end
 
       it 'succeeds on mobile' do
@@ -32,30 +30,40 @@ describe PostsController do
         response.should be_success
       end
 
+      it 'renders the application layout on mobile' do
+        get :show, :id => @message.id, :format => :mobile
+        response.should render_template('layouts/application')
+      end
+
       it 'succeeds on mobile with a reshare' do
-        get :show, "id" => Factory(:reshare, :author => alice.person).id, :format => :mobile
+        get :show, "id" => FactoryGirl.create(:reshare, :author => alice.person).id, :format => :mobile
         response.should be_success
       end
 
-      it 'marks a corresponding notification as read' do
-        alice.comment("comment after me", :post => @message)
-        bob.comment("here you go", :post => @message)
-        note = Notification.where(:recipient_id => alice.id, :target_id => @message.id).first
-        lambda{
+      it 'marks a corresponding notifications as read' do
+        FactoryGirl.create(:notification, :recipient => alice, :target => @message, :unread => true)
+        note = FactoryGirl.create(:notification, :recipient => alice, :target => @message, :unread => true)
+
+        expect {
           get :show, :id => @message.id
           note.reload
-        }.should change(note, :unread).from(true).to(false)
+        }.to change(Notification.where(:unread => true), :count).by(-2)
       end
 
       it 'succeeds with a AS/photo' do
-        photo = Factory(:activity_streams_photo, :author => bob.person)
+        photo = FactoryGirl.create(:activity_streams_photo, :author => bob.person)
         get :show, :id => photo.id
         response.should be_success
+      end
+
+      it '404 if the post is missing' do
+        expect {
+          get :show, :id => 1234567
+        }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
     context 'user not signed in' do
-
       context 'given a public post' do
         before :each do
           @status = alice.post(:status_message, :text => "hello", :public => true, :to => 'all')
@@ -76,33 +84,12 @@ describe PostsController do
           get :show, :id => @status.guid, :format => :xml
           response.body.should == @status.to_diaspora_xml
         end
-
-        context 'with more than 3 comments' do
-          before do
-            (1..5).each do |i|
-              alice.comment  "comment #{i}", :post => @status
-            end
-          end
-
-          it 'shows all comments of a public post' do
-            get :show, :id => @status.id
-
-            response.body.should =~ /comment 3/
-            response.body.should_not =~ /comment 2/
-
-            get :show, :id => @status.id, 'all_comments' => '1'
-
-            response.body.should =~ /comment 3/
-            response.body.should =~ /comment 2/
-          end
-        end
-
       end
 
       it 'does not show a private post' do
         status = alice.post(:status_message, :text => "hello", :public => false, :to => 'all')
         get :show, :id => status.id
-        response.status = 302
+        response.status.should == 404
       end
 
       # We want to be using guids from now on for this post route, but do not want to break
@@ -114,131 +101,43 @@ describe PostsController do
         end
 
         it 'assumes guids less than 8 chars are ids and not guids' do
-          Post.should_receive(:where).with(hash_including(:id => @status.id)).and_return(Post)
+          p = Post.where(:id => @status.id.to_s)
+          Post.should_receive(:where)
+              .with(hash_including(:id => @status.id.to_s))
+              .and_return(p)
           get :show, :id => @status.id
-          response.status= 200
+          response.should be_success
         end
 
         it 'assumes guids more than (or equal to) 8 chars are actually guids' do
-          Post.should_receive(:where).with(hash_including(:guid => @status.guid)).and_return(Post)
+          p = Post.where(:guid => @status.guid)
+          Post.should_receive(:where)
+              .with(hash_including(:guid => @status.guid))
+              .and_return(p)
           get :show, :id => @status.guid
-          response.status= 200
+          response.should be_success
         end
       end
     end
+  end
 
-    context 'when a post is public' do
-      before do
-        @post = alice.post( :status_message, :public => true, :to => alice.aspects, :text => 'abc 123' )
-      end
+  describe 'iframe' do
+    it 'contains an iframe' do
+      get :iframe, :id => @message.id
+      response.body.should match /iframe/
+    end
+  end
 
-      context 'and visitor is not signed in' do
-        it 'does not show social links' do
-          get :show, 'id' => @post.id
+  describe 'oembed' do
+    it 'works when you can see it' do
+      sign_in alice
+      get :oembed, :url => "/posts/#{@message.id}"
+      response.body.should match /iframe/
+    end
 
-          doc.should have_content('abc 123')
-          doc.should_not have_link('Like')
-          doc.should_not have_link('Comment')
-          doc.should_not have_link('Reshare')
-        end
-      end
-
-      context 'and signed in as poster' do
-        before do
-          sign_in alice
-        end
-
-        it 'does not show a reshare link' do
-          get :show, 'id' => @post.id
-
-          doc.should have_content('abc 123')
-          doc.should have_link('Like')
-          doc.should have_link('Comment')
-          doc.should_not have_link('Reshare')
-        end
-
-        context 'a reshare of the post' do
-          before do
-            @reshare = bob.post( :reshare, :public => true, :root_guid => @post.guid, :to => bob.aspects )
-          end
-
-          it 'does not show a reshare link' do
-            get :show, 'id' => @reshare.id
-
-            doc.should have_content('abc 123')
-            doc.should have_link('Like')
-            doc.should have_link('Comment')
-            doc.should_not have_link('Reshare')
-            doc.should_not have_link('Reshare original')
-            doc.should_not have_link('1 reshare')
-          end
-        end
-      end
-
-      context 'and signed in as someone other than the poster' do
-        before do
-          sign_in bob
-        end
-
-        it 'shows reshare link' do
-          get :show, 'id' => @post.id
-
-          doc.should have_content('abc 123')
-          doc.should have_link('Like')
-          doc.should have_link('Comment')
-          doc.should have_link('Reshare')
-        end
-      end
-
-      context 'and signed in as the resharer of the post' do
-        context 'a reshare of the post' do
-          before do
-            @reshare = bob.post( :reshare, :public => true, :root_guid => @post.guid, :to => bob.aspects )
-            # Don't know why this is needed, but this spec fails without it
-            sign_in bob
-          end
-
-          it 'does not show any reshare link' do
-            get :show, 'id' => @reshare.id
-
-            doc.should have_content('abc 123')
-            doc.should have_link('Like')
-            doc.should have_link('Comment')
-            doc.should_not have_link('1 reshare')
-            doc.should_not have_link('Reshare')
-          end
-        end
-      end
-
-      context 'and signed in as neither the poster nor the resharer of the post' do
-        before do
-          sign_in eve
-        end
-
-        it 'shows reshare link' do
-          get :show, 'id' => @post.id
-
-          doc.should have_content('abc 123')
-          doc.should have_link('Like')
-          doc.should have_link('Comment')
-          doc.should have_link('Reshare')
-        end
-
-        context 'a reshare of the post' do
-          before do
-            @reshare = bob.post( :reshare, :public => true, :root_guid => @post.guid, :to => bob.aspects )
-          end
-
-          it 'shows a reshare link' do
-            get :show, 'id' => @reshare.id
-
-            doc.should have_content('abc 123')
-            doc.should have_link('Like')
-            doc.should have_link('Comment')
-            doc.should have_link('Reshare original')
-          end
-        end
-      end
+    it 'returns a 404 response when the post is not found' do
+      get :oembed, :url => "/posts/#{@message.id}"
+      response.status.should == 404
     end
   end
 
@@ -264,35 +163,68 @@ describe PostsController do
 
     it 'will not let you destroy posts visible to you' do
       message = bob.post(:status_message, :text => "hey", :to => bob.aspects.first.id)
-      delete :destroy, :format => :js, :id => message.id
-      response.should_not be_success
+      expect { delete :destroy, :format => :js, :id => message.id }.to raise_error(ActiveRecord::RecordNotFound)
       StatusMessage.exists?(message.id).should be_true
     end
 
     it 'will not let you destory posts you do not own' do
       message = eve.post(:status_message, :text => "hey", :to => eve.aspects.first.id)
-      delete :destroy, :format => :js, :id => message.id
-      response.should_not be_success
+      expect { delete :destroy, :format => :js, :id => message.id }.to raise_error(ActiveRecord::RecordNotFound)
       StatusMessage.exists?(message.id).should be_true
     end
   end
 
-  describe '#index' do
+  describe "#next" do
     before do
       sign_in alice
+      Post.stub(:find_by_guid_or_id_with_user).and_return(mock_model(Post, :author => 4))
+      Post.stub_chain(:visible_from_author, :newer).and_return(next_post)
     end
 
-    it 'will succeed if admin' do
-      AppConfig[:admins] = [alice.username]
-      get :index
-      response.should be_success
+    let(:next_post){ mock_model(StatusMessage, :id => 34)}
+
+    context "GET .json" do
+      let(:mock_presenter) { mock(:as_json => {:title => "the unbearable lightness of being"}) }
+
+      it "should return a show presenter the next post" do
+        PostPresenter.should_receive(:new).with(next_post, alice).and_return(mock_presenter)
+        get :next, :id => 14, :format => :json
+        response.body.should == {:title => "the unbearable lightness of being"}.to_json
+      end
     end
 
-    it 'will redirect if not' do
-      AppConfig[:admins] = []
-      get :index
-      response.should be_redirect
+    context "GET .html" do
+      it "should redirect to the next post" do
+        get :next, :id => 14
+        response.should redirect_to(post_path(next_post))
+      end
+    end
+  end
+
+  describe "previous" do
+    before do
+      sign_in alice
+      Post.stub(:find_by_guid_or_id_with_user).and_return(mock_model(Post, :author => 4))
+      Post.stub_chain(:visible_from_author, :older).and_return(previous_post)
     end
 
+    let(:previous_post){ mock_model(StatusMessage, :id => 11)}
+
+    context "GET .json" do
+      let(:mock_presenter) { mock(:as_json => {:title => "existential crises"})}
+
+      it "should return a show presenter the next post" do
+        PostPresenter.should_receive(:new).with(previous_post, alice).and_return(mock_presenter)
+        get :previous, :id => 14, :format => :json
+        response.body.should == {:title => "existential crises"}.to_json
+      end
+    end
+
+    context "GET .html" do
+      it "should redirect to the next post" do
+        get :previous, :id => 14
+        response.should redirect_to(post_path(previous_post))
+      end
+    end
   end
 end

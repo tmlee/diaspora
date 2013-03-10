@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 en_1337:
@@ -8,16 +9,14 @@ en_1337:
     aspect_dropdown:
       add_to_aspect: "4DD N00B"
       all_aspects: "4LL 45P3C75"
-      error: "Couldn't start sharing with {{name}}.  Are you ignoring them?"
-      select_aspects: "Select aspects"
-      started_sharing_with: "You have started sharing with {{name}}!"
-      stopped_sharing_with: "You have stopped sharing with {{name}}."
+      error: "C0ULDN7 574LK {{name}}. H4V3 U PWND H1M?"
+      started_sharing_with: "U 574R73D 574LK1NG {{name}}!"
+      stopped_sharing_with: "U 570PP3D 574LK1NG {{name}}."
       toggle:
         few: "1N {{count}} 45P3C75"
         many: "1N {{count}} 45P3C75"
         one: "1N {{count}} 45P3C7"
         other: "1N {{count}} 45P3C75"
-        two: "1N {{count}} 45P3C75"
         zero: "4DD N00B"
     aspect_navigation:
       deselect_all: "D353L3C7 4LL"
@@ -26,18 +25,16 @@ en_1337:
     comments:
       hide: "H1D3 5P4M5!"
       show: "5H0W 4LL 5P4M5!"
-    confirm_dialog: 5UR3?
+    confirm_dialog: "5UR3?"
     failed_to_like: "F41L3D 2 <3!"
     failed_to_post_message: "F41L3D 2 53ND 5P4M!"
     getting_started:
-      alright_ill_wait: "Alright, I'll wait."
-      hey: "Hey, {{name}}!"
-      no_tags: "Hey, you haven't followed any tags!  Continue anyway?"
+      hey: "H3Y, {{name}}!"
       preparing_your_stream: "Preparing your personialized stream..."
+    header:
+      search: "F1ND N00B5 0R #74G5"
     infinite_scroll:
       no_more: "EOF"
-    photo_uploader:
-      looking_good: "OMG, you look awesome!"
     publisher:
       at_least_one_aspect: "Y0U MU57 70 PUBL15CH 47 L3457 1 4SP3C7"
       limited: "L1M173D - Y0UR 5P4M W1LL 0NLY B33 533N BY N00B5 U 4R3 5H4R1NG W17H!"
@@ -46,8 +43,27 @@ en_1337:
       duplicate: "U H4V3 4LR34DY R35P4MM3D 7HI5!"
     search_for: "S34RCH F0R {{name}}"
     show_more: "5H0W M0R3!"
+    stream:
+      likes:
+        few: "<%= count %> <3"
+        many: "<%= count %> <3"
+        one: "<%= count %> <3"
+        other: "<%= count %> <3"
+        zero: "<%= count %> <3"
+      more_comments:
+        few: "5H0W <%= count %> M0R3 C0MM3N75"
+        many: "5H0W <%= count %> M0R3 C0MM3N75"
+        one: "5H0W <%= count %> M0R3 C0MM3N7"
+        other: "5H0W <%= count %> M0R3 C0MM3N75"
+        zero: "5H0W <%= count %> M0R3 C0MM3N75"
+      reshares:
+        few: "<%= count %> R35H4R35"
+        many: "<%= count %> R35H4R35"
+        one: "<%= count %> R35H4R3"
+        other: "<%= count %> R35H4R35"
+        zero: "<%= count %> R35H4R35"
     tags:
-      wasnt_that_interesting: "OK, I suppose #{{tagName}} wasn't all that interesting..."
+      wasnt_that_interesting: "0K, 1 5UPP053 #{{tagName}} W45N7 7H47 1N73R3571NG..."
     timeago:
       day: "4 D4Y"
       days: "%d D4Y5"
@@ -67,5 +83,3 @@ en_1337:
     videos:
       unknown: "UNK0WN V1D30 7YP3"
       watch: "W47CH 7H15 V1D30 0N {{provider}}"
-    web_sockets:
-      disconnected: D15C0NN3C73D!

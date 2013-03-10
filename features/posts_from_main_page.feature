@@ -5,28 +5,58 @@ Feature: posting from the main page
     I want to tell the world I am eating a yogurt
 
     Background:
-      Given a user with username "bob"
-      And a user with username "alice"
+      Given following users exist:
+        | username   |
+        | bob        |
+        | alice      |
       And I sign in as "bob@bob.bob"
       And a user with username "bob" is connected with "alice"
-      And I have an aspect called "PostingTo"
-      And I have an aspect called "NotPostingThingsHere"
+      Given I have following aspects:
+        | PostingTo            |
+        | NotPostingThingsHere |
       And I have user with username "alice" in an aspect called "PostingTo"
       And I have user with username "alice" in an aspect called "NotPostingThingsHere"
       And I am on the home page
 
     Scenario: post a text-only message to all aspects
       Given I expand the publisher
-      When I fill in "status_message_fake_text" with "I am eating a yogurt"
+      When I fill in the following:
+          | status_message_fake_text    | I am eating yogurt    |
       And I press "Share"
+      And I wait for the ajax to finish
+
       And I go to the aspects page
-      Then I should see "I am eating a yogurt" within ".stream_element"
+      Then "I am eating yogurt" should be post 1
+
+    Scenario: re-posting a text-only message
+      Given I expand the publisher
+      When I fill in the following:
+          | status_message_fake_text    | The World needs more Cats.    |
+      And I press "Share"
+      And I wait for the ajax to finish
+
+      Given I expand the publisher
+      When I fill in the following:
+          | status_message_fake_text    | The World needs more Cats.    |
+      And I press "Share"
+      And I wait for the ajax to finish
+
+      And I go to the aspects page
+      Then "The World needs more Cats." should be post 1
+      Then "The World needs more Cats." should be post 2
+
+    Scenario: posting a message appends it to the top of the stream
+      When I click the publisher and post "sup dog"
+      And I wait for 1 second
+      And I click the publisher and post "hello there"
+      Then I should see "hello there" as the first post in my stream
 
     Scenario: post a text-only message to just one aspect
       When I select only "PostingTo" aspect
       And I expand the publisher
-      And I fill in "status_message_fake_text" with "I am eating a yogurt"
-
+      And I fill in the following:
+          | status_message_fake_text    | I am eating a yogurt    |
+      
       And I press "Share"
       And I wait for the ajax to finish
 
@@ -41,7 +71,8 @@ Feature: posting from the main page
     Scenario: post a photo with text
       Given I expand the publisher
       When I attach the file "spec/fixtures/button.png" to hidden element "file" within "#file-upload"
-      And I fill in "status_message_fake_text" with "Look at this dog"
+      When I fill in the following:
+          | status_message_fake_text    | Look at this dog    |
       And I press "Share"
       And I wait for the ajax to finish
       And I go to the aspects page
@@ -75,12 +106,12 @@ Feature: posting from the main page
       And I click to delete the first uploaded photo
       And I wait for the ajax to finish
       Then I should not see an uploaded image within the photo drop zone
-      And the publisher should be collapsed
 
     Scenario: back out of uploading a picture to a post with text
       Given I expand the publisher
       And I have turned off jQuery effects
-      When I fill in "status_message_fake_text" with "I am eating a yogurt"
+      When I fill in the following:
+          | status_message_fake_text    | I am eating a yogurt    |
       And I attach the file "spec/fixtures/button.png" to hidden element "file" within "#file-upload"
       And I wait for the ajax to finish
       And I click to delete the first uploaded photo
@@ -91,7 +122,8 @@ Feature: posting from the main page
     Scenario: back out of uploading a picture when another has been attached
       Given I expand the publisher
       And I have turned off jQuery effects
-      When I fill in "status_message_fake_text" with "I am eating a yogurt"
+      When I fill in the following:
+          | status_message_fake_text    | I am eating a yogurt    |
       And I attach the file "spec/fixtures/button.png" to hidden element "file" within "#file-upload"
       And I attach the file "spec/fixtures/button.png" to hidden element "file" within "#file-upload"
       And I wait for the ajax to finish
@@ -100,9 +132,11 @@ Feature: posting from the main page
       Then I should see an uploaded image within the photo drop zone
       And the publisher should be expanded
 
+    @wip
     Scenario: hide a contact's post
       Given I expand the publisher
-      When I fill in "status_message_fake_text" with "Here is a post for you to hide"
+      When I fill in the following:
+          | status_message_fake_text    | Here is a post for you to hide    |
       And I press "Share"
       And I wait for the ajax to finish
 
@@ -115,13 +149,16 @@ Feature: posting from the main page
       And I click to delete the first post
       And I wait for the ajax to finish
       And I go to "bob@bob.bob"'s page
+      And I wait for the ajax to finish
       Then I should not see "Here is a post for you to hide"
       When I am on the aspects page
+      And I wait for the ajax to finish
       Then I should not see "Here is a post for you to hide"
 
     Scenario: delete one of my posts
       Given I expand the publisher
-      When I fill in "status_message_fake_text" with "I am eating a yogurt"
+      When I fill in the following:
+          | status_message_fake_text    | I am eating a yogurt    |
       And I press "Share"
       And I wait for the ajax to finish
       And I go to the aspects page
@@ -131,24 +168,6 @@ Feature: posting from the main page
       And I wait for the ajax to finish
       And I go to the aspects page
       Then I should not see "I am eating a yogurt"
-
-    Scenario: change aspects in the middle of the post writing
-      When I select only "NotPostingThingsHere" aspect
-      And I expand the publisher
-      And I fill in "status_message_fake_text" with "I am eating a yogurt"
-      And I follow "PostingTo" within "#aspect_nav"
-      And I follow "NotPostingThingsHere" within "#aspect_nav"
-      And I wait for the ajax to finish
-      Then the publisher should be expanded
-      When I append " and also cornflakes" to the publisher
-      And I press "Share"
-      And I wait for the ajax to finish
-      And I am on the aspects page
-      And I select only "PostingTo" aspect
-      Then I should see "I am eating a yogurt and also cornflakes"
-      When I am on the aspects page
-      And I select only "NotPostingThingsHere" aspect
-      Then I should not see "I am eating a yogurt and also cornflakes"
 
     Scenario: change post target aspects with the aspect-dropdown before posting
       When I expand the publisher
@@ -182,27 +201,24 @@ Feature: posting from the main page
 
       And I am on the aspects page
       And I select only "PostingTo" aspect
-      Then I should see "I am eating a yogurt"
-      Then I should see "And cornflakes also"
+      Then I should see "I am eating a yogurt" and "And cornflakes also"
       When I am on the aspects page
       And I select only "Besties" aspect
       Then I should not see "I am eating a yogurt"
       Then I should see "And cornflakes also"
       When I am on the aspects page
       And I select only "NotPostingThingsHere" aspect
-      Then I should not see "I am eating a yogurt"
-      Then I should not see "And cornflakes also"
+      Then I should not see "I am eating a yogurt" and "And cornflakes also"
 
+    # (NOTE) make this a jasmine spec
     Scenario: reject deletion one of my posts
       When I expand the publisher
-      And I fill in "status_message_fake_text" with "I am eating a yogurt"
+      When I fill in the following:
+          | status_message_fake_text    | I am eating a yogurt    |
       And I press "Share"
       And I wait for the ajax to finish
 
-      When I click the aspects title
       And I hover over the ".stream_element"
       And I preemptively reject the alert
       And I click to delete the first post
       Then I should see "I am eating a yogurt"
-      And I should see first post deletion link
-      And I should not see ajax loader on deletion link place

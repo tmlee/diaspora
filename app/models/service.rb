@@ -4,16 +4,33 @@
 
 class Service < ActiveRecord::Base
   include ActionView::Helpers::TextHelper
-
+  require Rails.root.join('app', 'helpers', 'markdownify_helper')
+  include MarkdownifyHelper
+  
   belongs_to :user
   validates_uniqueness_of :uid, :scope => :type
-  has_many :service_users, :dependent => :destroy
 
-  def public_message(post, length, url = "")
-    url = "" if post.respond_to?(:photos) && post.photos.count == 0
-    space_for_url = url.blank? ? 0 : (url.length + 1)
-    truncated = truncate(post.text(:plain_text => true), :length => (length - space_for_url))
-    truncated = "#{truncated} #{url}" unless url.blank?
+  def self.titles(service_strings)
+    service_strings.map{|s| "Services::#{s.titleize}"}
+  end
+
+  def public_message(post, length, url = "", always_include_post_url = true, markdown = false)
+    Rails.logger.info("Posting out to #{self.class}")
+    if ! markdown
+      post_text = strip_markdown(post.text(:plain_text => true))
+    else
+      post_text = post.text(:plain_text => true)
+    end
+    if post_text.length <= length && ! always_include_post_url
+        # include url to diaspora when posting only when it exceeds length
+        url = ""
+        space_for_url = 0
+    else
+        url = " " + Rails.application.routes.url_helpers.short_post_url(post, :protocol => AppConfig.pod_uri.scheme, :host => AppConfig.pod_uri.authority)
+        space_for_url = 21 + 1
+    end
+    truncated = truncate(post_text, :length => (length - space_for_url))
+    truncated = "#{truncated}#{url}"
     return truncated
   end
 
@@ -22,5 +39,5 @@ class Service < ActiveRecord::Base
   end
 
 end
-require File.join(Rails.root, 'app/models/services/facebook')
-require File.join(Rails.root, 'app/models/services/twitter')
+require Rails.root.join('app', 'models', 'services', 'facebook')
+require Rails.root.join('app', 'models', 'services', 'twitter')

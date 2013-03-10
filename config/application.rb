@@ -2,7 +2,8 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-require File.expand_path('../boot', __FILE__)
+require 'pathname'
+require Pathname.new(__FILE__).expand_path.dirname.join('boot')
 
 # Needed for versions of ruby 1.9.2 that were compiled with libyaml.
 # They use psych by default which doesn't handle having a default set of parameters.
@@ -13,12 +14,16 @@ if RUBY_VERSION.include? '1.9'
 end
 
 require 'rails/all'
-# If you have a Gemfile, require the gems listed there, including any gems
-# you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env) if defined?(Bundler)
 
-# use newrelic if configured via config/newrelic.yml
-require 'newrelic_rpm' if File.exists?(File.expand_path('../newrelic.yml', __FILE__))
+# Sanitize groups to make matching :assets easier
+RAILS_GROUPS = Rails.groups(:assets => %w(development test)).map { |group| group.to_sym }
+
+if defined?(Bundler)
+  # If you precompile assets before deploying to production, use this line
+  Bundler.require(*RAILS_GROUPS)
+  # If you want your assets lazily compiled in production, use this line
+  # Bundler.require(:default, :assets, Rails.env)
+end
 
 module Diaspora
   class Application < Rails::Application
@@ -27,11 +32,8 @@ module Diaspora
     # -- all .rb files in that directory are automatically loaded.
 
     # Add additional load paths for your own custom dirs
-     #config.autoload_paths += %W(#{config.root}/lib)
+     config.autoload_paths += %W(#{config.root}/app/presenters)
      config.autoload_paths += %W(#{config.root}/lib)
-     config.autoload_paths += %W(#{config.root}/lib/*)
-     config.autoload_paths += %W(#{config.root}/lib/*/*)
-     config.autoload_paths += %W(#{config.root}/lib/*/*/*)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named
@@ -63,6 +65,32 @@ module Diaspora
     config.filter_parameters += [:message]
     config.filter_parameters += [:text]
     config.filter_parameters += [:bio]
+
+    # Enable the asset pipeline
+    config.assets.enabled = true
+
+    config.assets.initialize_on_precompile = false
+
+    # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
+    # Javascripts
+    config.assets.precompile += [ "aspect-contacts.js", "contact-list.js", "finder.js",
+      "home.js", "ie.js", "inbox.js", "jquery.js", "jquery_ujs.js", "jquery.textchange.js",
+      "login.js", "mailchimp.js", "main.js", "mobile.js", "profile.js", "people.js", "photos.js",
+      "profile.js", "publisher.js", "templates.js", "validation.js" ]
+
+    # Stylesheets
+    config.assets.precompile += [ "blueprint.css", "bootstrap.css", "bootstrap-complete.css",
+      "bootstrap-responsive.css", "default.css", "error_pages.css", "login.css", "mobile.css",
+      "new-templates.css", "rtl.css" ]
+
+    # Rails Admin - these assets need to be added here since the Engine initializer
+    # doesn't run with initialize_on_precompile disabled. This list is taken
+    # directly from the Rails Admin Engine initializer.
+    config.assets.precompile += ['rails_admin/rails_admin.js', 'rails_admin/rails_admin.css',
+      'rails_admin/jquery.colorpicker.js', 'rails_admin/jquery.colorpicker.css']
+
+    # Version of your assets, change this if you want to expire all your assets
+    config.assets.version = '1.0'
 
   end
 end

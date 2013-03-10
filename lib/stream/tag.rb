@@ -12,7 +12,7 @@ class Stream::Tag < Stream::Base
   end
 
   def tag
-    @tag ||= ActsAsTaggableOn::Tag.find_by_name(tag_name)
+    @tag ||= ActsAsTaggableOn::Tag.named(tag_name).first
   end
 
   def tag_follow_count
@@ -24,11 +24,11 @@ class Stream::Tag < Stream::Base
   end
 
   def tagged_people
-    @people ||= Person.profile_tagged_with(tag_name).paginate(:page => people_page, :per_page => 15)
+    @people ||= ::Person.profile_tagged_with(tag_name).paginate(:page => people_page, :per_page => 15)
   end
 
   def tagged_people_count
-    @people_count ||= Person.profile_tagged_with(tag_name).count
+    @people_count ||= ::Person.profile_tagged_with(tag_name).count
   end
 
   def posts
@@ -52,11 +52,11 @@ class Stream::Tag < Stream::Base
 
   def construct_post_query
     posts = StatusMessage
-    if user.present? 
+    if user.present?
       posts = posts.owned_or_visible_by_user(user)
     else
       posts = posts.all_public
     end
-    posts.tagged_with(tag_name)
+    posts.tagged_with(tag_name, :any => true)
   end
 end

@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 da:
@@ -33,9 +34,7 @@ da:
         arrived: "Det sociale netværk du har ventet på, er kommet. Ombygget, sikrere og sjovere, er %{strong_diaspora} klar til at hjælpe dig med at dele og udforske web på en helt ny måde."
         be_yourself: "Vær dig selv"
         be_yourself_paragraph: "Internettet har skabt nye unikke måder vi kan udtrykke os på. %{strong_diaspora} lader dig være dig selv og dele som du ønsker det, med eller uden dit rigtige navn."
-        cubbies: Cubbi.es
         displaying_correctly: "Ser e-mailen forkert ud? %{link}"
-        email_address: questions@joindiaspora.com
         email_us: "For generelle spørgsmål eller hjælp med din Diaspora-konto, send venligst en email til os på %{email}."
         finally: "Endelig er det her"
         friends_saying: "Hvad dine venner siger..."
@@ -54,12 +53,10 @@ da:
         or: "eller"
         sign_up_now: "Tilmeld dig nu &rarr;"
         subject: "Du er blevet inviteret til at bruge Diaspora!"
-        team_diaspora: "Team Diaspora"
         unsubscribe: "Hvis du gerne vil holde op med at få e-mails som denne, klik %{link}."
         view_in: "Se den i din browser."
       inviter:
         accept_at: "på %{url}, du kan acceptere ved at følge linket nedenunder."
-        has_invited_you: "%{name}"
         have_invited_you: "%{names} har inviteret dig til at deltage i Diaspora."
       reset_password_instructions:
         change: "Skift min adgangskode"

@@ -1,6 +1,7 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 en_1337:
@@ -9,7 +10,6 @@ en_1337:
       confirmed: "M41L 0K"
       new:
         resend_confirmation: "R353ND C0NF1RM471ON!"
-      send_instructions: ""
     failure:
       inactive: "4CC N07 4C71V3 Y37!"
       invalid: "N1CK C0LLU510N!"
@@ -29,37 +29,14 @@ en_1337:
         you_can_confirm: "4CC C0MF1RM471ON -> L1NK B3L0W"
       hello: "H3Y %{email}!"
       invitation_instructions:
-        accept: J01N!
-        arrived: "The social network you have been waiting for has arrived. Revamped, more secure, and more fun, %{strong_diaspora} is ready to help you share and explore the web in a whole new way."
-        be_yourself: "Be Yourself"
-        be_yourself_paragraph: "The Internet has created unique new ways for us to express ourselves. %{strong_diaspora} lets you be yourself and share however you want, with or without your real name."
-        cubbies: Cubbi.es
-        displaying_correctly: "Email not displaying correctly? %{link} in your browser"
-        email_address: questions@joindiaspora.com
-        email_us: "For general inquiries or support with your Diaspora account, please email us at %{email}."
-        finally: "Finally - it's here"
-        friends_saying: "What your friends are saying..."
-        get_connected: "Get Connected"
-        get_connected_paragraph: "An international movement with a shared vision for a better web, %{strong_diaspora}'s #1 feature is its community. Meet new people, connect with friends, and join the fun."
-        have_fun: "Have Fun"
-        have_fun_paragraph: "%{strong_diaspora} is all about discovering amazing new content and people online. %{link}, the world's first %{strong_diaspora} application is just the begining. Collect and share the web in all of its glory."
-        help_fund: "help fund Diaspora"
-        here: "here"
+        accept: "J01N!"
+        displaying_correctly: "M41L != C0RR3C7? %{link} 1N UR BR0W53R"
         ignore: "1M 4 N00B!"
-        join_team: "Join our Team"
-        love: "Love,"
-        made_by_people: "%{strong_diaspora} is made by people who love the Internet as much as you do. %{jointeam}, or %{helpfund}!"
-        more_people: "Even more people are excited to see you!"
         no_account_till: "51GN UP -> L1NK!"
-        or: "or"
-        sign_up_now: "Sign up now &rarr;"
         subject: "U H4V3 B33N 1NV173D 70 D*!"
-        team_diaspora: "Team Diaspora"
-        unsubscribe: "To unsubscribe please click %{link}."
-        view_in: "View in"
+        view_in: "V13W 1N"
       inviter:
         accept_at: "@ %{url}, U C4N 4CC3P7 17 -> L1NK!"
-        has_invited_you: "%{name}"
         have_invited_you: "%{names} H4V3 1NV173D Y0U 2 J01N!"
       reset_password_instructions:
         change: "CH4NG3 *****!"
@@ -78,7 +55,7 @@ en_1337:
         change_password: "CH4NG3 MY *****"
       new:
         forgot_password: "F0RG07 Y0UR *****?"
-        no_account: "404 - Not Found"
+        no_account: "404 - N07 F0UND!"
         send_password_instructions: "R3537 MY *****!!"
       send_instructions: "G0NN4 R3C113V3 R3537 1N57RUC71ON5 BY M41L!"
       updated: "***** CH4NG3D"
@@ -97,7 +74,7 @@ en_1337:
         remember_me: "C47CH M3 (1F U C4N!)"
         sign_in: "51GN 1N"
         username: "N1CK"
-      signed_in: G07CH4!
+      signed_in: "G07CH4!"
       signed_out: "KTHXB41"
     shared:
       links:
@@ -116,6 +93,6 @@ en_1337:
       unlocked: "4CC UNL0CK3D!"
   errors:
     messages:
-      already_confirmed: "409 - Conflicting Request"
-      not_found: "404 - Not Found"
-      not_locked: "1337 - Not Locked"
+      already_confirmed: "409 - C0NFL1C71NG R3QU357"
+      not_found: "404 - N07 F0UND"
+      not_locked: "1337 - N07 L0CK3D"

@@ -7,9 +7,8 @@ require 'spec_helper'
 describe UsersController do
   before do
     @user = alice
-    @aspect = @user.aspects.first
-    @aspect1 = @user.aspects.create(:name => "super!!")
     sign_in :user, @user
+    @controller.stub(:current_user).and_return(@user)
   end
 
   describe '#export' do
@@ -35,23 +34,32 @@ describe UsersController do
     it 'should 404 if no user is found' do
       get :user_photo, :username => 'none'
       response.should_not be_success
-    end 
+    end
   end
 
   describe '#public' do
     it 'renders xml if atom is requested' do
-      sm = Factory(:status_message, :public => true, :author => @user.person)
+      sm = FactoryGirl.create(:status_message, :public => true, :author => @user.person)
       get :public, :username => @user.username, :format => :atom
-      response.body.should include(sm.text)
+      response.body.should include(sm.raw_message)
+    end
+
+    it 'renders xml if atom is requested with clickalbe urls' do
+      sm = FactoryGirl.create(:status_message, :public => true, :author => @user.person)
+      @user.person.posts.each do |p|
+        p.text = "Goto http://diasporaproject.org/ now!"
+        p.save
+      end
+      get :public, :username => @user.username, :format => :atom
+      response.body.should include('a href')
     end
 
     it 'redirects to a profile page if html is requested' do
-      Diaspora::OstatusBuilder.should_not_receive(:new)
       get :public, :username => @user.username
       response.should be_redirect
     end
+
     it 'redirects to a profile page if mobile is requested' do
-      Diaspora::OstatusBuilder.should_not_receive(:new)
       get :public, :username => @user.username, :format => :mobile
       response.should be_redirect
     end
@@ -109,6 +117,13 @@ describe UsersController do
     describe 'email' do
       before do
         Resque.stub!(:enqueue)
+      end
+
+      it 'disallow the user to change his new (unconfirmed) mail when it is the same as the old' do
+        @user.email = "my@newemail.com"
+        put(:update, :id => @user.id, :user => { :email => "my@newemail.com"})
+        @user.reload
+        @user.unconfirmed_email.should eql(nil)
       end
 
       it 'allow the user to change his (unconfirmed) email' do
@@ -192,14 +207,14 @@ describe UsersController do
       delete :destroy, :user => { :current_password => "stuff" }
     end
 
-    it 'enqueues a delete job' do
-      Resque.should_receive(:enqueue).with(Jobs::DeleteAccount, alice.id)
+    it 'closes the account' do
+      alice.should_receive(:close_account!)
       delete :destroy, :user => { :current_password => "bluepin7" }
     end
 
-    it 'locks the user out' do
+    it 'enqueues a delete job' do
+      Resque.should_receive(:enqueue).with(Jobs::DeleteAccount, anything)
       delete :destroy, :user => { :current_password => "bluepin7" }
-      alice.reload.access_locked?.should be_true
     end
   end
 
@@ -242,4 +257,3 @@ describe UsersController do
     end
   end
 end
-

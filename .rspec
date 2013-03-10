@@ -2,4 +2,5 @@
 --profile
 --color
 --tag ~performance
---tag ~fixture
+--order random
+--drb

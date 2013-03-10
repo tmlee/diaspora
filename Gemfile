@@ -1,150 +1,171 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.11'
+gem 'rails', '3.2.12'
 
-gem 'bundler', '>= 1.0.0'
-gem 'foreman'
+gem 'foreman', '0.61'
 
-gem 'thin', '1.2.11', :require => false
+gem 'unicorn', '4.6.0', :require => false
+
+gem 'rails_autolink', '1.0.9'
+
+# configuration
+gem 'configurate', '0.0.2'
+
+# cross-origin resource sharing
+
+gem 'rack-cors', '0.2.7', :require => 'rack/cors'
+
+# click-jacking protection
+
+gem 'rack-protection', '1.2'
 
 # authentication
 
-gem 'devise', '~> 1.3.1'
-gem 'devise_invitable', '0.5.0'
-gem 'jwt', "0.1.3"
-gem 'oauth2-provider', '0.0.16'
-gem 'omniauth', '0.2.6'
-gem 'twitter', '1.5.0'
+gem 'devise', '2.1.3'
 
-# backups
+gem 'remotipart', '1.0.5'
 
-gem 'cloudfiles', '1.4.10', :require => false
+gem 'omniauth', '1.1.3'
+gem 'omniauth-facebook', '1.4.1'
+gem 'omniauth-tumblr', '1.1'
+gem 'omniauth-twitter', '0.0.14'
 
-# chef
+gem 'twitter', '4.5.0'
 
-gem 'chef', '0.9.12', :require => false
-gem 'ohai', '0.5.8', :require => false
+# mail
 
-# configuration
+gem 'markerb', '1.0.1'
+gem 'messagebus_ruby_api', '1.0.3'
 
-gem 'settingslogic', '2.0.6'
+group :production do # we don't install these on travis to speed up test runs
+  gem 'rails_admin', '0.4.5'
+  gem 'rack-ssl', '1.3.3', :require => 'rack/ssl'
+  gem 'rack-rewrite', '1.3.3', :require => false
 
-# database 
+  # analytics
+  gem 'rack-google-analytics', '0.11.0', :require => 'rack/google-analytics'
+  gem 'rack-piwik', '0.1.3', :require => 'rack/piwik', :require => false
 
-gem 'activerecord-import'
-gem 'foreigner', '0.9.1'
-gem 'mysql2', "~> 0.2.13", :git => "git://github.com/brianmario/mysql2.git", :ref => "5c4ea4cf1e" if ENV['DB'].nil? || ENV['DB'] == 'all' || ENV['DB'] == 'mysql'
-gem 'pg' if ENV['DB'] == 'all' || ENV['DB'] == 'postgres'
+end
+
+
+# database
+
+gem "activerecord-import", "0.3.1"
+gem 'foreigner', '1.3.0'
+gem 'mysql2', '0.3.11' if ENV['DB'].nil? || ENV['DB'] == 'all' || ENV['DB'] == 'mysql'
+gem 'pg', '0.14.1' if ENV['DB'] == 'all' || ENV['DB'] == 'postgres'
 gem 'sqlite3' if ENV['DB'] == 'all' || ENV['DB'] == 'sqlite'
 
 # file uploading
 
-gem 'aws', '2.3.32' # upgrade to 2.4 breaks 1.8 >.<
-gem 'carrierwave', '0.5.3'
-gem 'excon', '0.2.4'
-gem 'fastercsv', '1.5.4', :require => false
-gem 'fog', '0.3.25'
-gem 'jammit', '0.5.4'
-gem 'mini_magick', '3.2'
-gem 'rest-client', '1.6.1'
-gem 'typhoeus'
+gem 'carrierwave', '0.8.0'
+gem 'fog', '1.9.0'
+gem 'mini_magick', '3.5'
 
 # JSON and API
 
-gem 'json', '1.4.6'
-gem 'vanna', :git => 'git://github.com/MikeSofaer/vanna.git'
+gem 'json', '1.7.7'
+gem 'acts_as_api', '0.4.1 '
 
 # localization
 
 gem 'i18n-inflector-rails', '~> 1.0'
-gem 'rails-i18n'
+gem 'rails-i18n', '0.7.2'
 
 # parsing
 
-gem 'nokogiri'
-gem 'redcarpet', "2.0.0b5"
-gem 'roxml', :git => 'git://github.com/Empact/roxml.git', :ref => '7ea9a9ffd2338aaef5b0'
-gem 'ruby-oembed'
+gem 'nokogiri', '1.5.6'
+gem 'redcarpet', "2.2.2"
+gem 'roxml', :git => 'https://github.com/Empact/roxml.git', :ref => '7ea9a9ffd2338aaef5b0'
+gem 'ruby-oembed', '0.8.8'
 
 # queue
 
-gem 'resque', '1.10.0'
-gem 'resque-ensure-connected'
+gem 'resque', '1.23.0'
 gem 'resque-timeout', '1.0.0'
-gem 'SystemTimer', '1.2.3', :platforms => :ruby_18
-
-# reporting
-
-gem 'hoptoad_notifier'
-gem 'newrelic_rpm', :require => false
-
-#mail
-
-gem 'messagebus_ruby_api', '0.4.8'
 
 # tags
 
-gem 'acts-as-taggable-on', :git => 'git://github.com/diaspora/acts-as-taggable-on.git'
+gem 'acts-as-taggable-on', '2.3.3'
 
 # URIs and HTTP
 
-gem 'addressable', '2.2.4', :require => 'addressable/uri'
-gem 'http_accept_language', :git => 'git://github.com/iain/http_accept_language.git', :ref => '0b78aa7849fc90cf9e12'
+gem 'addressable', '2.3.2', :require => 'addressable/uri'
+gem 'http_accept_language', '1.0.2'
+gem 'typhoeus', '0.3.3'
 
 # views
 
-gem 'haml', '3.1.2'
-gem 'mobile-fu'
-gem 'sass', '3.1.7'
-gem 'will_paginate', '3.0.pre2'
-gem 'client_side_validations'
+gem 'haml', '4.0.0'
+gem 'mobile-fu', '1.1.1'
+
+gem 'will_paginate', '3.0.4'
+gem 'client_side_validations', '3.2.1'
+gem 'gon', '4.0.2'
+
+# assets
+
+group :assets do
+  gem 'bootstrap-sass', '2.2.2.0'
+  gem 'sass-rails', '3.2.6'
+
+  # Windows and OSX have an execjs compatible runtime built-in, Linux users should
+  # install Node.js or use 'therubyracer'.
+  #
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+
+  # gem 'therubyracer', :platform => :ruby
+
+  gem 'handlebars_assets', '0.11.0'
+  gem 'uglifier', '1.3.0'
+
+  gem "asset_sync", '0.5.4', :require => false
+end
+
+gem 'jquery-rails', '2.1.4'
 
 # web
 
-gem 'faraday'
-gem 'faraday-stack'
+gem 'faraday', '0.8.5'
+gem 'faraday_middleware', '0.9.0'
 
-# web sockets
 
-gem 'em-synchrony', :platforms => :ruby_19
-gem 'em-websocket'
+gem 'jasmine', '1.3.1'
 
 ### GROUPS ####
 
-group :test, :development do
-  gem 'jasmine', '1.1.0.rc3'
+group :test do
+
+
+  gem 'capybara', '1.1.3'
+  gem 'cucumber-rails', '1.3.0', :require => false
+  gem 'database_cleaner', '0.9.1'
+
+  gem 'timecop', '0.5.9.2'
+  gem 'factory_girl_rails', '4.2.1'
+  gem 'fixture_builder', '0.3.5'
+  gem 'fuubar', '1.1.0'
+  gem 'rspec-instafail', '0.2.4', :require => false
+  gem 'selenium-webdriver', '2.29.0'
+
+  gem 'webmock', '1.8.11', :require => false
+
+  gem 'spork', '1.0.0rc3'
+  gem 'guard-rspec', '2.4.0'
+  gem 'guard-spork', '1.4.2'
+  gem 'guard-cucumber', '1.3.2'
+  gem 'rb-inotify', '0.9.0', :require => false
+  gem 'rb-fsevent', '0.9.3', :require => false
 end
 
-group :test do
-  gem 'capybara', '~> 0.3.9'
-  gem 'cucumber-rails', '0.3.2'
-  gem 'cucumber-api-steps', :require => false
-  gem 'database_cleaner', '0.6.0'
-  gem 'diaspora-client', :git => 'git://github.com/diaspora/diaspora-client.git'
-                          #"0.1.0", #:path => '~/workspace/diaspora-client'
-  gem 'factory_girl_rails'
-  gem 'fixture_builder', '0.3.0'
-  gem 'fuubar'
-  gem 'mongrel', :require => false, :platforms => :ruby_18
-  gem 'rspec', '>= 2.0.0'
-  gem 'rspec-core', '2.6.0'
-  gem 'rspec-instafail', '>= 0.1.7', :require => false
-  gem 'rspec-rails', '>= 2.0.0'
-  gem "selenium-webdriver", "~> 2.10.0"
-  gem 'webmock', :require => false
-  gem 'sqlite3'
-  gem 'mock_redis'
+group :test, :development do
+  gem "rspec-rails", "2.12.2"
 end
 
 group :development do
-  gem 'capistrano', '2.5.19', :require => false
-  gem 'capistrano_colors', :require => false
-  gem 'capistrano-ext', '1.2.1', :require => false
-  gem 'linecache', '0.43', :platforms => :mri_18
-  gem 'parallel_tests'
-  gem 'ruby-debug-base19', '0.11.23' if RUBY_VERSION.include? '1.9.1'
-  gem 'ruby-debug19', :platforms => :ruby_19
-  gem 'ruby-debug', :platforms => :mri_18
-  gem 'sod', :git => 'git://github.com/MikeSofaer/sod.git', :require => false
-  #gem 'yard'
+  gem 'capistrano', '2.12.0', :require => false
+  gem 'capistrano_colors', '0.5.5', :require => false
+
+  gem 'rmagick', '2.13.2', :require => false
 end

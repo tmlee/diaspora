@@ -1,4 +1,6 @@
-unless File.exists?( File.join(Rails.root, 'config', 'initializers', 'secret_token.rb'))
-  `rake generate:secret_token`
-   require  File.join(Rails.root, 'config', 'initializers', 'secret_token.rb')
-end
+if AppConfig.heroku?
+  Rails.application.config.secret_token = AppConfig.secret_token
+elsif !File.exists?( Rails.root.join('config', 'initializers', 'secret_token.rb'))
+  `bundle exec rake generate:secret_token`
+  require  Rails.root.join('config', 'initializers', 'secret_token.rb')
+end 

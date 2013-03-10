@@ -3,29 +3,55 @@
 #   the COPYRIGHT file.
 
 Diaspora::Application.routes.draw do
-
-
-  # Posting and Reading
-
-  resources :reshares
-
-  resources :aspects do
-    put :toggle_contact_visibility
+  if Rails.env.production?
+    mount RailsAdmin::Engine => '/admin_panel', :as => 'rails_admin'
   end
+
+
+  get "/atom.xml" => redirect('http://blog.diasporafoundation.org/feed/atom') #too many stupid redirects :()
+
+  get 'oembed' => 'posts#oembed', :as => 'oembed'
+  # Posting and Reading
+  resources :reshares
 
   resources :status_messages, :only => [:new, :create]
 
-  resources :posts, :only => [:show, :destroy] do
-    resources :likes, :only => [:create, :destroy, :index]
+  resources :posts do
+    member do
+      get :next
+      get :previous
+      get :interactions
+    end
+
+    resources :likes, :only => [:create, :destroy, :index ]
+    resources :participations, :only => [:create, :destroy, :index]
     resources :comments, :only => [:new, :create, :destroy, :index]
   end
+
   get 'p/:id' => 'posts#show', :as => 'short_post'
-  get 'public_stream' => 'posts#index', :as => 'public_stream'
+  get 'posts/:id/iframe' => 'posts#iframe', :as => 'iframe'
+
   # roll up likes into a nested resource above
   resources :comments, :only => [:create, :destroy] do
     resources :likes, :only => [:create, :destroy, :index]
   end
 
+  # Streams
+  get "participate" => "streams#activity", :as => "activity_stream" # legacy
+  get "explore" => "streams#multi", :as => "stream"                 # legacy
+
+  get "activity" => "streams#activity", :as => "activity_stream"
+  get "stream" => "streams#multi", :as => "stream"
+  get "public" => "streams#public", :as => "public_stream"
+  get "followed_tags" => "streams#followed_tags", :as => "followed_tags_stream"
+  get "mentions" => "streams#mentioned", :as => "mentioned_stream"
+  get "liked" => "streams#liked", :as => "liked_stream"
+  get "commented" => "streams#commented", :as => "commented_stream"
+  get "aspects" => "streams#aspects", :as => "aspects_stream"
+
+  resources :aspects do
+    put :toggle_contact_visibility
+  end
 
   get 'bookmarklet' => 'status_messages#bookmarklet'
 
@@ -43,33 +69,21 @@ Diaspora::Application.routes.draw do
     delete 'visibility' => 'conversation_visibilities#destroy'
   end
 
+  get 'notifications/read_all' => 'notifications#read_all'
   resources :notifications, :only => [:index, :update] do
-    get :read_all, :on => :collection
   end
 
   resources :tags, :only => [:index]
-  scope "tags/:name" do
-    post   "tag_followings" => "tag_followings#create", :as => 'tag_tag_followings'
-    delete "tag_followings" => "tag_followings#destroy"
-  end
 
-  post   "multiple_tag_followings" => "tag_followings#create_multiple", :as => 'multiple_tag_followings'
-
-  get "tag_followings" => "tag_followings#index", :as => 'tag_followings'
-  resources :mentions, :only => [:index]
-  resources "tag_followings", :only => [:create]
-
-  get 'comment_stream' => 'comment_stream#index', :as => 'comment_stream'
-
-  get 'like_stream' => 'like_stream#index', :as => 'like_stream'
+  resources "tag_followings", :only => [:create, :destroy, :index]
 
   get 'tags/:name' => 'tags#show', :as => 'tag'
 
   resources :apps, :only => [:show]
 
   #Cubbies info page
-  resource :token, :only => :show
 
+  resource :token, :only => :show
 
   # Users and people
 
@@ -93,11 +107,13 @@ Diaspora::Application.routes.draw do
 
   devise_for :users, :controllers => {:registrations => "registrations",
                                       :password      => "devise/passwords",
-                                      :sessions      => "sessions",
-                                      :invitations   => "invitations"} do
-    get 'invitations/resend/:id' => 'invitations#resend', :as => 'invitation_resend'
-    get 'invitations/email' => 'invitations#email', :as => 'invite_email'
-  end
+                                      :sessions      => "sessions"}
+
+  #legacy routes to support old invite routes
+  get 'users/invitation/accept' => 'invitations#edit'
+  get 'invitations/email' => 'invitations#email', :as => 'invite_email'
+  get 'users/invitations' => 'invitations#new', :as => 'new_user_invitation'
+  post 'users/invitations' => 'invitations#create', :as => 'new_user_invitation'
 
   get 'login' => redirect('/users/sign_in')
 
@@ -107,28 +123,34 @@ Diaspora::Application.routes.draw do
     get   :weekly_user_stats
     get   :correlations
     get   :stats, :as => 'pod_stats'
+    get   "add_invites/:invite_code_id" => 'admins#add_invites', :as => 'add_invites'
   end
 
   resource :profile, :only => [:edit, :update]
+  resources :profiles, :only => [:show]
+
 
   resources :contacts,           :except => [:update, :create] do
     get :sharing, :on => :collection
   end
-  resources :aspect_memberships, :only  => [:destroy, :create, :update]
+  resources :aspect_memberships, :only  => [:destroy, :create]
   resources :share_visibilities,  :only => [:update]
   resources :blocks, :only => [:create, :destroy]
 
-  get 'spotlight' => 'community_spotlight#index', :as => 'spotlight'
+  get 'i/:id' => 'invitation_codes#show', :as => 'invite_code'
 
-  get 'community_spotlight' => "contacts#spotlight", :as => 'community_spotlight'
-
-  get 'stream' => "multis#index", :as => 'multi'
-
+  get 'people/refresh_search' => "people#refresh_search"
   resources :people, :except => [:edit, :update] do
     resources :status_messages
     resources :photos
-    get  :contacts
+    get :contacts
     get "aspect_membership_button" => :aspect_membership_dropdown, :as => "aspect_membership_button"
+    get :hovercard
+
+    member do
+      get :last_post
+    end
+
     collection do
       post 'by_handle' => :retrieve_remote, :as => 'person_by_handle'
       get :tag_index
@@ -136,6 +158,8 @@ Diaspora::Application.routes.draw do
   end
   get '/u/:username' => 'people#show', :as => 'user_profile'
   get '/u/:username/profile_photo' => 'users#user_photo'
+
+
   # Federation
 
   controller :publics do
@@ -150,13 +174,6 @@ Diaspora::Application.routes.draw do
 
 
   # External
-
-  resources :authorizations, :only => [:index, :destroy]
-  scope "/oauth", :controller => :authorizations, :as => "oauth" do
-    get "authorize" => :new
-    post "authorize" => :create
-    post :token
-  end
 
   resources :services, :only => [:index, :destroy]
   controller :services do
@@ -181,7 +198,7 @@ Diaspora::Application.routes.draw do
     end
   end
 
-
+  get 'community_spotlight' => "contacts#spotlight", :as => 'community_spotlight'
   # Mobile site
 
   get 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
@@ -190,12 +207,9 @@ Diaspora::Application.routes.draw do
   get 'protocol' => redirect("https://github.com/diaspora/diaspora/wiki/Diaspora%27s-federation-protocol")
 
   # Resque web
-  if AppConfig[:mount_resque_web]
+  if AppConfig.admins.inline_resque_web?
     mount Resque::Server.new, :at => '/resque-jobs', :as => "resque_web"
   end
-
-  # Logout Page (go mobile)
-  get 'logged_out' => 'users#logged_out', :as => 'logged_out'
 
   # Startpage
   root :to => 'home#show'

@@ -5,12 +5,13 @@ Feature: posting
   I want to see what humanity is saying about particular tags
 
   Background:
-    Given a user with username "bob"
-    And a user with username "alice"
+    Given following users exist:
+      | username   | 
+      | bob        |
+      | alice      |
 
     When I sign in as "bob@bob.bob"
     And I post a status with the text "I am da #boss"
-    And I am on the home page
     When I go to the destroy user session page
     And I sign in as "alice@alice.alice"
     And I search for "#boss"
@@ -29,13 +30,12 @@ Feature: posting
     Then I should see "I am da #boss" within "body"
 
   Scenario: can stop following a tag from the tag page
-    When I hover over the ".button.tag_following"
-    And I press "Following #boss"
-    And I go to the home page
+    When I press "Following #boss"
+    And I go to the followed tags stream page
     Then I should not see "#boss" within ".left_nav"
 
   Scenario: can stop following a tag from the homepage
-    When I go to the home page
+    When I go to the followed tags stream page
     And I preemptively confirm the alert
     And I hover over the "li.unfollow#tag-following-boss"
     And I follow "unfollow_boss"

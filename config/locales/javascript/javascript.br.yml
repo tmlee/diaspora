@@ -1,15 +1,16 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
+
 
 
 br:
   javascripts:
     aspect_dropdown:
       add_to_aspect: "Add to aspect"
-      all_aspects: "All aspects"
+      all_aspects: "An holl weloù"
       error: "Couldn't start sharing with {{name}}.  Are you ignoring them?"
-      select_aspects: "Select aspects"
+      select_aspects: "Dilenn gweloù"
       started_sharing_with: "You have started sharing with {{name}}!"
       stopped_sharing_with: "You have stopped sharing with {{name}}."
       toggle:
@@ -17,35 +18,71 @@ br:
         many: "In {{count}} aspects"
         one: "In {{count}} aspect"
         other: "In {{count}} aspects"
-        two: "In {{count}} aspects"
         zero: "Add to aspect"
     aspect_navigation:
-      deselect_all: "Deselect all"
-      no_aspects: "No aspects selected"
-      select_all: "Select all"
+      deselect_all: "Dizilenn pep tra"
+      no_aspects: "N'hoc'h eus dilennet gwel ebet"
+      select_all: "Dilenn pep tra"
     comments:
-      hide: "hide comments"
-      show: "show all comments"
+      hide: "Kuzhat an evezhiadennoù"
+      show: "Diskwel an holl evezhiadennoù"
     confirm_dialog: "Emaoc'h sur?"
-    failed_to_like: "Failed to like!"
-    failed_to_post_message: "Failed to post message!"
+    delete: "Dilemel"
     getting_started:
-      alright_ill_wait: "Alright, I'll wait."
+      alright_ill_wait: "Ma, me zo o vont da c'hortoz."
       hey: "Hey, {{name}}!"
-      no_tags: "Hey, you haven't followed any tags!  Continue anyway?"
       preparing_your_stream: "Preparing your personialized stream..."
+    header:
+      admin: "Merañ"
+      contacts: "Darempredoù"
+      home: "Degemer"
+      log_out: "Digennaskañ"
+      mark_all_as_read: "Merkit pep tra evel lennet"
+      messages: "Kemennadennoù"
+      notifications: "Kemennoù"
+      profile: "Profil"
+      recent_notifications: "Kemennoù nevez"
+      search: "Find people or #tags"
+      settings: "Arventennoù"
+      view_all: "Gwelet pep tra"
     infinite_scroll:
-      no_more: "No more posts."
+      no_more: "Kemennadenn all ebet"
+    my_activity: "Ma c'heleier"
+    my_stream: "Gwazh"
     photo_uploader:
-      looking_good: "OMG, you look awesome!"
+      looking_good: "Biskoazh kement-all ! Tres brav zo ganeoc'h !"
     publisher:
       at_least_one_aspect: "Dav eo deoc'h embann un arvez da'n nebeutañ"
-      limited: "Limited - your post will only be seen by people you are sharing with"
-      public: "Public - your post will be visible to everyone and found by search engines"
     reshares:
       duplicate: "You've already reshared that post!"
     search_for: "Klask war-lerc'h {{name}}"
-    show_more: "show more"
+    show_more: "Gwelet muioc'h"
+    stream:
+      comment: "Ober un evezhiadenn"
+      follow: "Heuliañ"
+      hide: "Kuzhat"
+      hide_nsfw_posts: "Kuzhat ar c'hemennadennoù #nsfw"
+      like: "Plijout a ra din"
+      likes:
+        one: "<%= count %> Plijet"
+        other: "<%= count %> Plijet"
+        zero: "<%= count %> Plijet"
+      limited: "Bevennet"
+      more_comments:
+        one: "Diskwel <%= count %> evezhiadenn ouzhpenn"
+        other: "Diskwel <%= count %> evezhiadenn ouzhpenn"
+        zero: "Diskwel <%= count %> evezhiadenn ouzhpenn"
+      original_post_deleted: "Dilamet eo bet ar gemennadenn orin gant hec'h aozer."
+      public: "Boutin"
+      reshare: "Rannañ en-dro"
+      reshares:
+        one: "<%= count %> Adrannerezh"
+        other: "<%= count %> Adrannerezh"
+        zero: "<%= count %> Adrannerezh"
+      show_nsfw_post: "Diskouez ar gemennadenn"
+      show_nsfw_posts: "Diskouez pep tra"
+      unfollow: "Chom hep heuliañ"
+      unlike: "Ne blij ket din ken"
     tags:
       wasnt_that_interesting: "OK, I suppose #{{tagName}} wasn't all that interesting..."
     timeago:
@@ -61,11 +98,9 @@ br:
       prefixFromNow: ""
       seconds: "dindan ur vunutenn"
       suffixAgo: "zo"
-      suffixFromNow: diwar-vremañ
+      suffixFromNow: "diwar-vremañ"
       year: "war-dro ur bloavezh"
       years: "%d a vloavezhioù"
     videos:
       unknown: "Stumm ar video dianav"
       watch: "Sellet ouzh ar video gant {{provider}}"
-    web_sockets:
-      disconnected: "The websocket is closed; posts will no longer be streamed live."

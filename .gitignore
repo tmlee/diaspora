@@ -1,24 +1,20 @@
 #trademark sillyness
-app/views/home/_show.html.haml
-app/views/home/_show.mobile.haml
-public/images/ball_small.png
-public/images/ball.png
+app/views/home/_show.*
+app/assets/images/custom/*
+
+
 # Configuration files
-config/app_config.yml
-config/app.yml
-config/application.yml
-config/script_server*.yml
-config/fb_config.yml
-config/oauth_keys.yml
+config/diaspora.yml
+config/heroku.yml
 config/initializers/secret_token.rb
 config/redis.conf
 config/deploy_config.yml
-config/newrelic.yml
 .bundle
 vendor/bundle/*
 vendor/cache/*
 config/database.yml
 .rvmrc_custom
+.rvmrc.local
 
 #Mailing list stuff
 config/email_offset
@@ -41,6 +37,7 @@ doc/
 public/uploads/*
 public/assets/*
 public/source.tar*
+public/.well-known
 tmp/**/*
 tmp/*
 *.sqlite3
@@ -56,6 +53,7 @@ tmp/*
 *.swo
 *.swp
 *~
+*#
 bin/*
 nbproject
 patches-*
@@ -64,3 +62,7 @@ dump.rdb
 
 #Rubinius's JIT
 *.rbc
+
+# Ignore precompiled assets
+# Heroku or Capistrano can and should regenerate them on every deploy
+public/assets
