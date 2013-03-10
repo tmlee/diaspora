@@ -1,3 +1,29 @@
+# Head
+
+## Bug fixes
+
+* reset comment box height after posting a comment. [#4030](https://github.com/diaspora/diaspora/issues/4030)
+* fade long tag names. [#3899](https://github.com/diaspora/diaspora/issues/3899)
+* avoid posting empty comments. [#3836](https://github.com/diaspora/diaspora/issues/3836)
+* Delegate parent_author to the target of a RelayableRetraction
+* Do not fail on receiving a SignedRetraction via the public route
+* Pass the real values to stderr_path and stdout_path in unicorn.rb since it runs a case statement on them.
+
+## Refactor
+
+* Add a configuration entry to set max-age header to Amazon S3 resources. [#4048](https://github.com/diaspora/diaspora/pull/4048)
+* Refactor people_controller#show and photos_controller#index [#4002](https://github.com/diaspora/diaspora/issues/4002)
+* Modularize layout [#3944](https://github.com/diaspora/diaspora/pull/3944)
+* Add header to the sign up page [#3944](https://github.com/diaspora/diaspora/pull/3944)
+
+## Features
+
+* Deleting a post that was shared to Facebook now deletes it from Facebook too [#3980]( https://github.com/diaspora/diaspora/pull/3980)
+* Include reshares in a users public atom feed [#1781](https://github.com/diaspora/diaspora/issues/1781)
+* Add the ability to upload photos from the mobile site. [#4004](https://github.com/diaspora/diaspora/issues/4004)
+* Show timestamp when hovering on comment time-ago string. [#4042](https://github.com/diaspora/diaspora/issues/4042)
+* If sharing a post with photos to Facebook, always include URL to post [#3706](https://github.com/diaspora/diaspora/issues/3706)
+
 # 0.0.3.2
 
 * Fix XSS vulnerability in conversations#new [#4010](https://github.com/diaspora/diaspora/issues/4010)
@@ -50,7 +76,7 @@
 * Stream form on profile page [#3910](https://github.com/diaspora/diaspora/issues/3910).
 * Add Getting_Started page mobile. [#3949](https://github.com/diaspora/diaspora/issues/3949).
 * Autoscroll to the first unread message in conversations. [#3216](https://github.com/diaspora/diaspora/issues/3216)
-* Friendlier new-conversation mobile. [#3984](https://github.com/diaspora/diaspora/issues/3984) 
+* Friendlier new-conversation mobile. [#3984](https://github.com/diaspora/diaspora/issues/3984)
 
 ## Bug Fixes
 

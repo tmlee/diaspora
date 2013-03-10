@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.12'
 
@@ -77,7 +77,7 @@ gem 'rails-i18n', '0.7.2'
 
 gem 'nokogiri', '1.5.6'
 gem 'redcarpet', "2.2.2"
-gem 'roxml', :git => 'https://github.com/Empact/roxml.git', :ref => '7ea9a9ffd2338aaef5b0'
+gem 'roxml', '3.1.6'
 gem 'ruby-oembed', '0.8.8'
 
 # queue
@@ -147,7 +147,7 @@ group :test do
   gem 'fixture_builder', '0.3.5'
   gem 'fuubar', '1.1.0'
   gem 'rspec-instafail', '0.2.4', :require => false
-  gem 'selenium-webdriver', '2.29.0'
+  gem 'selenium-webdriver', '2.30.0'
 
   gem 'webmock', '1.8.11', :require => false
 
